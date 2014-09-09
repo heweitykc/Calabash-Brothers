@@ -12,7 +12,7 @@ public:
 private:
 	CCSprite* _background;
 	ccColor4F randomBrightColor();
-	CCSprite* spriteWithColor(ccColor4F bgColor, float textureSize);
+	CCSprite* spriteWithColor(ccColor4F c1, ccColor4F c2, float textureSize, int nStripes);
 	void genBackground();
 };
 #endif

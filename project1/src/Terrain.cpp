@@ -1,9 +1,9 @@
 #include "Terrain.h"
 
-CCSprite* Terrain::spriteWithColor(ccColor4F bgColor, float textureSize)
+CCSprite* Terrain::spriteWithColor(ccColor4F c1, ccColor4F c2, float textureSize, int nStripes)
 {
 	CCRenderTexture* rt = CCRenderTexture::create(textureSize, textureSize);
-	rt->beginWithClear(bgColor.r, bgColor.g, bgColor.b, bgColor.a);
+	rt->beginWithClear(c1.r, c1.g, c1.b, c1.a);
 
 	/*
 	glDisable(GL_TEXTURE_2D);
@@ -58,7 +58,10 @@ ccColor4F Terrain::randomBrightColor()
 void Terrain::genBackground()
 {
 	ccColor4F bgColor = randomBrightColor();
-	_background = spriteWithColor(bgColor, 512);
+	ccColor4F color2 = randomBrightColor();
+	int nStripes = ((CCRANDOM_0_1() * 4) + 1) * 2;
+
+	_background = spriteWithColor(bgColor, color2, 512, nStripes);
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 	_background->setPosition(ccp(winSize.width / 2,winSize.height / 2));
 	this->addChild(_background);	
