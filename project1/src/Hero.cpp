@@ -1,77 +1,112 @@
-#include "Sky.h"
+#include "Hero.h"
 
-CCSprite* Sky::spriteWithColor(ccColor4F c1, ccColor4F c2, float textureSize, int nStripes)
+void Hero::createBody()
 {
-	CCRenderTexture* rt = CCRenderTexture::create(textureSize, textureSize);
-	rt->beginWithClear(c1.r, c1.g, c1.b, c1.a);
+	float radius = 16.0f;	
+	CCSize size = CCDirector::sharedDirector()->getWinSize();
+	int screenH = size.height;
 
-	/*
-	glDisable(GL_TEXTURE_2D);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	CCPoint startPosition = ccp(0, screenH / 2 + radius);
 
-	float gradientAlpha = 0.7;
-	CCPoint vertices[4];
-	ccColor4F colors[4];
-	int nVertices = 0;
+	b2BodyDef bd;
+	bd.type = b2_dynamicBody;
+	bd.linearDamping = 0.1f;
+	bd.fixedRotation = true;
+	bd.position.Set(startPosition.x / PTM_RATIO, startPosition.y / PTM_RATIO);
+	_body = _world->CreateBody(&bd);
 
-	vertices[nVertices] = CCPointMake(0, 0);
-	colors[nVertices++] = ccc4f( 0, 0, 0, 0);
-	vertices[nVertices] = CCPointMake(textureSize, 0);
-	colors[nVertices++] = ccc4f(0, 0, 0, 0);
-	vertices[nVertices] = CCPointMake(0, textureSize);
-	colors[nVertices++] = ccc4f(0, 0, 0, gradientAlpha);
-	vertices[nVertices] = CCPointMake(textureSize, textureSize);
-	colors[nVertices++] = ccc4f(0, 0, 0, gradientAlpha);
+	b2CircleShape shape;
+	shape.m_radius = radius / PTM_RATIO;
 
-	glVertexPointer(2, GL_FLOAT, 0, vertices);
-	glColorPointer(4, GL_FLOAT, 0, colors);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, (GLsizei)nVertices);
+	b2FixtureDef fd;
+	fd.shape = &shape;
+	fd.density = 1.0f;
+	fd.restitution = 0.0f;
+	fd.friction = 0.2;
 
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glEnable(GL_TEXTURE_2D);*/
-
-	CCSprite *noise = CCSprite::create("tw/Noise.png");
-	ccBlendFunc maskBlend = { GL_DST_COLOR, GL_ZERO };
-	noise->setBlendFunc(maskBlend);
-	noise->setPosition(ccp(textureSize / 2, textureSize / 2));
-	noise->visit();
-
-	rt->end();
-	return CCSprite::createWithTexture(rt->getSprite()->getTexture());
+	_body->CreateFixture(&fd);
 }
 
-
-ccColor4F Sky::randomBrightColor()
+void Hero::initWithWorld(b2World *world)
 {
-	while (true){
-		float requiredBrightness = 192;
-		ccColor4B randomColor =
-			ccc4(CCRANDOM_0_1() * 255, CCRANDOM_0_1() * 255, CCRANDOM_0_1() * 255, 255);
-		if (randomColor.r > requiredBrightness ||
-			randomColor.g > requiredBrightness ||
-			randomColor.b > requiredBrightness) {
-			return ccc4FFromccc4B(randomColor);
-		}
+	this->initWithSpriteFrameName("seal1.png");
+	_world = world;
+	_nextVel = 0;
+	createBody();
+
+	_normalAnim = CCAnimation::create();
+	_normalAnim->addSpriteFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("seal1.png"));
+	_normalAnim->addSpriteFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("seal2.png"));
+	_normalAnim->setDelayPerUnit(0.1);
+}
+
+void Hero::update()
+{
+	this->setPosition(ccp(_body->GetPosition().x*PTM_RATIO, _body->GetPosition().y*PTM_RATIO));
+	b2Vec2 vel = _body->GetLinearVelocity();
+	b2Vec2 weightedVel = vel;
+
+	for (int i = 0; i < NUM_PREV_VELS; ++i) {
+		weightedVel += _prevVels[i];
+	}
+	weightedVel = b2Vec2(weightedVel.x / NUM_PREV_VELS, weightedVel.y / NUM_PREV_VELS);
+	_prevVels[_nextVel++] = vel;
+	if (_nextVel >= NUM_PREV_VELS) _nextVel = 0;
+
+	float angle = ccpToAngle(ccp(weightedVel.x, weightedVel.y));
+	if (_awake) {
+		this->setRotation(-1 * CC_RADIANS_TO_DEGREES(angle));
 	}
 }
 
-void Sky::genBackground()
+bool Hero::getAwake()
 {
-	ccColor4F bgColor = randomBrightColor();
-	ccColor4F color2 = randomBrightColor();
-	int nStripes = ((CCRANDOM_0_1() * 4) + 1) * 2;
-
-	_background = spriteWithColor(bgColor, color2, 512, nStripes);
-	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
-	_background->setPosition(ccp(winSize.width / 2, winSize.height / 2));
-	this->addChild(_background);
-	//CCSprite *noise = CCSprite::create("tw/Noise.png");
-	//this->addChild(noise);
+	return _awake;
 }
 
-bool Sky::init()
+void Hero::wake()
 {
-	genBackground();
-	setTouchEnabled(true);
-	return true;
+	_awake = true;
+	_body->SetActive(true);
+	_body->ApplyLinearImpulse(b2Vec2(1, 2), _body->GetPosition());
+}
+
+void Hero::dive()
+{
+	_body->ApplyForce(b2Vec2(5, -50), _body->GetPosition());
+}
+
+void Hero::limitVelocity()
+{
+	if (!_awake) return;
+
+	const float minVelocityX = 5;
+	const float minVelocityY = -40;
+	b2Vec2 vel = _body->GetLinearVelocity();
+	if (vel.x < minVelocityX) {
+		vel.x = minVelocityX;
+	}
+	if (vel.y < minVelocityY) {
+		vel.y = minVelocityY;
+	}
+	_body->SetLinearVelocity(vel);
+}
+
+void Hero::runNormalAnimation()
+{
+	if (_normalAnimate || !_awake) return;	
+	_normalAnimate = CCAnimate::create(_normalAnim);
+	this->runAction(_normalAnimate);
+}
+
+void Hero::runForceAnimation()
+{
+	_normalAnimate->stop();
+	_normalAnimate = NULL;
+	this->setDisplayFrame(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName("seal_downhill.png"));
+}
+
+void Hero::nodive()
+{
+	runNormalAnimation();
 }

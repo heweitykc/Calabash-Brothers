@@ -1,18 +1,44 @@
-#ifndef _SKY_H_
-#define _SKY_H_
+#ifndef _HERO_H_
+#define _HERO_H_
+
+#define NUM_PREV_VELS   5
 
 #include "cocos2d.h"
+#include "Box2D\Box2D.h"
+#include "GLES-Render.h"
+#include "AppMacros.h"
+
 USING_NS_CC;
 
-class Sky : public CCLayer
+#define NUM_PREV_VELS   5
+#define PTM_RATIO   32.0
+
+class Hero : public CCSprite
 {
 public:
-	CREATE_FUNC(Sky);
-	virtual bool init();
-private:
-	CCSprite* _background;
-	ccColor4F randomBrightColor();
-	CCSprite* spriteWithColor(ccColor4F c1, ccColor4F c2, float textureSize, int nStripes);
-	void genBackground();
+	CREATE_FUNC(Hero);
+
+	b2World *_world;
+	b2Body *_body;
+	BOOL _awake;
+
+	b2Vec2 _prevVels[NUM_PREV_VELS];
+	int _nextVel;
+
+	CCAnimation *_normalAnim;
+	CCAnimate *_normalAnimate;
+
+	bool getAwake();
+	void wake();
+	void dive();
+	void limitVelocity();
+	void initWithWorld(b2World *world);
+	void update();
+	void nodive();
+
+	void createBody();
+	void runNormalAnimation();
+	void runForceAnimation();
 };
+
 #endif
