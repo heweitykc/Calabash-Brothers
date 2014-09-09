@@ -11,3 +11,13 @@ http://www.cnblogs.com/zilongshanren/archive/2011/07/01/2095489.html
 
 3. 如何制作一个类似tiny wings的游戏：第二部分
 http://www.cnblogs.com/andyque/archive/2011/07/02/2095527.html
+
+	/*
+    CCLayer* pLayer = new Box2DTestLayer();
+    addChild(pLayer);
+    pLayer->release();
+	*/
+	Terrain* t = Terrain::create();
+	addChild(t);
+	//t->release();
+    CCDirector::sharedDirector()->replaceScene(this);
