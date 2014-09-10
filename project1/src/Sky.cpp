@@ -28,13 +28,13 @@ CCSprite* Sky::spriteWithColor(ccColor4F bgColor, float textureSize)
 
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	glEnable(GL_TEXTURE_2D);
-
+	/*
 	CCSprite *noise = CCSprite::create("tw/Noise.png");
 	ccBlendFunc maskBlend = { GL_DST_COLOR, GL_ZERO };
 	noise->setBlendFunc(maskBlend);
 	noise->setPosition(ccp(textureSize / 2, textureSize / 2));
 	noise->visit();
-
+	*/
 	rt->end();
 	return CCSprite::createWithTexture(rt->getSprite()->getTexture());
 }
@@ -42,8 +42,6 @@ CCSprite* Sky::spriteWithColor(ccColor4F bgColor, float textureSize)
 CCSprite* Sky::stripedSpriteWithColor1(ccColor4F c1, ccColor4F c2, float textureSize, int nStripes)
 {
 	CCRenderTexture* rt = CCRenderTexture::create(textureSize, textureSize);
-
-	// 2: Call CCRenderTexture:begin
 	rt->beginWithClear(c1.r, c1.g, c1.b, c1.a);
 
 	// 3: Draw into the texture    
@@ -120,12 +118,13 @@ CCSprite* Sky::stripedSpriteWithColor1(ccColor4F c1, ccColor4F c2, float texture
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	glEnable(GL_TEXTURE_2D);
 
+	/*
 	// Layer 2: Noise    
 	CCSprite *noise = CCSprite::create("tw/Noise.png");
 	noise->setBlendFunc(ccBlendFunc({ GL_DST_COLOR, GL_ZERO }));
 	noise->setPosition(ccp(textureSize / 2, textureSize / 2));
 	noise->visit();
-
+	*/
 	// 4: Call CCRenderTexture:end
 	rt->end();
 
@@ -140,7 +139,7 @@ ccColor4F Sky::randomBrightColor()
 	while (true){
 		float requiredBrightness = 192;
 		ccColor4B randomColor =
-			ccc4(CCRANDOM_0_1() * 255, CCRANDOM_0_1() * 255, CCRANDOM_0_1() * 255, 255);
+			ccc4(CCRANDOM_0_1() * 255, CCRANDOM_0_1() * 255, CCRANDOM_0_1() * 255, 0);
 		if (randomColor.r > requiredBrightness ||
 			randomColor.g > requiredBrightness ||
 			randomColor.b > requiredBrightness) {
@@ -154,14 +153,13 @@ void Sky::genBackground()
 	ccColor4F bgColor = randomBrightColor();	
 
 	_background = spriteWithColor(bgColor, 512);
-	_background->retain();
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
-	_background->setPosition(ccp(winSize.width / 2, winSize.height / 2));
-	this->addChild(_background);
+	_background->setPosition(ccp(winSize.width / 2, winSize.height / 2));	
+	this->addChild(_background,0);
 
 	ccColor4F color3 = randomBrightColor();
 	ccColor4F color4 = randomBrightColor();
-	CCSprite *stripes = stripedSpriteWithColor1(color3,color4, 512,4);
+	CCSprite *stripes = stripedSpriteWithColor1(color3, color4, 512, 4);
 	stripes->retain();
 	ccTexParams tp2 = { GL_LINEAR, GL_LINEAR, GL_REPEAT, GL_CLAMP_TO_EDGE };	
 	stripes->getTexture()->setTexParameters(&tp2);	
@@ -194,7 +192,10 @@ void Sky::createTestBodyAtPostition(CCPoint position)
 
 bool Sky::init()
 {
+	_tapDown = false;
+
 	setupWorld();
+	setupDebugDraw();
 	_terrain = Terrain::create();
 	_terrain->initWithWorld(_world);
 	this->addChild(_terrain);
@@ -202,7 +203,6 @@ bool Sky::init()
 	genBackground();
 	setTouchEnabled(true);
 	this->scheduleUpdate();
-
 	this->setScale(1.0f);
 
 	_hero = Hero::create();
@@ -232,12 +232,10 @@ void Sky::update(float delta)
 			if (!_hero->getAwake()) {
 				_hero->wake();
 				_tapDown = true;
-			}
-			else {				
+			} else {				
 				_hero->dive();
 			}
-		}
-		else {			
+		} else {			
 			_hero->nodive();
 		}		
 		_hero->limitVelocity();
@@ -249,6 +247,7 @@ void Sky::update(float delta)
 	}
 
 	_hero->update();
+
 	float offset = _hero->getPositionX();
 
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
@@ -259,7 +258,12 @@ void Sky::update(float delta)
 	CCSize textureSize = _background->getTextureRect().size;
 	_background->setTextureRect(CCRectMake(offset*0.7, 0, textureSize.width, textureSize.height));
 	_terrain->setOffsetX(offset);
+}
 
+void Sky::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent)
+{
+	genBackground();
+	_tapDown = true;
 }
 
 void Sky::ccTouchesEnded(CCSet *pTouches, CCEvent *pEvent)
@@ -278,4 +282,11 @@ CCScene* Sky::scene()
 	Sky *layer = Sky::create();	
 	scene->addChild(layer);
 	return scene;
+}
+
+void Sky::setupDebugDraw()
+{
+	_debugDraw = new GLESDebugDraw(PTM_RATIO*CCDirector::sharedDirector()->getContentScaleFactor());
+	_world->SetDebugDraw(_debugDraw);
+	_debugDraw->SetFlags(GLESDebugDraw::e_shapeBit);
 }

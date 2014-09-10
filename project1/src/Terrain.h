@@ -30,8 +30,7 @@ public:
 	CCPoint _borderVertices[kMaxBorderVertices];
 
 	b2World *_world;
-	b2Body *_body;
-	GLESDebugDraw * _debugDraw;
+	b2Body *_body;	
 
 	CCSpriteBatchNode * _batchNode;
 
@@ -46,8 +45,7 @@ public:
 
 	void resetBox2DBody();
 	void generateHills();
-	void resetHillVertices();
-	void setupDebugDraw();	
+	void resetHillVertices();	
 
 	virtual void draw();	
 };

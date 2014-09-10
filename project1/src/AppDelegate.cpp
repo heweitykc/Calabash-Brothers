@@ -24,7 +24,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
     // set FPS. the default value is 1.0/60 if you don't call this
     pDirector->setAnimationInterval(1.0 / 60);
 
-	CCEGLView::sharedOpenGLView()->setDesignResolutionSize(800, 480, kResolutionExactFit );
+	pEGLView->setDesignResolutionSize(800, 480, kResolutionExactFit);
+	pEGLView->setFrameSize(800, 480);
 
     // create a scene. it's an autorelease object
 	CCScene *pScene = Sky::scene();

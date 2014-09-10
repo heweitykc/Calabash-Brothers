@@ -11,7 +11,6 @@
 USING_NS_CC;
 
 #define NUM_PREV_VELS   5
-#define PTM_RATIO   32.0
 
 class Hero : public CCSprite
 {
@@ -20,7 +19,7 @@ public:
 
 	b2World *_world;
 	b2Body *_body;
-	BOOL _awake;
+	bool _awake;
 
 	b2Vec2 _prevVels[NUM_PREV_VELS];
 	int _nextVel;

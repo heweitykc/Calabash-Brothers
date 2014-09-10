@@ -121,18 +121,10 @@ void Terrain::resetHillVertices()
 	}
 }
 
-void Terrain::setupDebugDraw()
-{	
-	_debugDraw = new GLESDebugDraw(PTM_RATIO*CCDirector::sharedDirector()->getContentScaleFactor());
-	_world->SetDebugDraw(_debugDraw);
-	_debugDraw->SetFlags(GLESDebugDraw::e_shapeBit | GLESDebugDraw::e_jointBit);
-}
-
 void Terrain::initWithWorld(b2World *world)
 {
 		_world = world;
 		_body = NULL;
-		setupDebugDraw();
 		generateHills();
 		resetHillVertices();
 		
@@ -151,9 +143,35 @@ void Terrain::draw(void)
 	glTexCoordPointer(2, GL_FLOAT, 0, _hillTexCoords);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, (GLsizei)_nHillVertices);
 
+	for(int i = MAX(_fromKeyPointI, 1); i <= _toKeyPointI; ++i) {
+		glColor4f(1.0, 0, 0, 1.0);
+		ccDrawLine(_hillKeyPoints[i-1], _hillKeyPoints[i]);
+
+		glColor4f(1.0, 1.0, 1.0, 1.0);
+
+		CCPoint p0 = _hillKeyPoints[i-1];
+		CCPoint p1 = _hillKeyPoints[i];
+		int hSegments = floorf((p1.x-p0.x)/kHillSegmentWidth);
+		float dx = (p1.x - p0.x) / hSegments;
+		float da = M_PI / hSegments;
+		float ymid = (p0.y + p1.y) / 2;
+		float ampl = (p0.y - p1.y) / 2;
+
+		CCPoint pt0, pt1;
+		pt0 = p0;
+		for (int j = 0; j < hSegments+1; ++j) {
+			pt1.x = p0.x + j*dx;
+			pt1.y = ymid + ampl * cosf(da*j);
+			ccDrawLine(pt0, pt1);
+			pt0 = pt1;
+		}
+	}
+
 	glDisable(GL_TEXTURE_2D);
 	glDisableClientState(GL_COLOR_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);	
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	_world->DrawDebugData();
 
 	glEnable(GL_TEXTURE_2D);
 	glEnableClientState(GL_COLOR_ARRAY);

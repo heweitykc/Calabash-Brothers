@@ -16,12 +16,14 @@ public:
 	static CCScene* scene();
 	CREATE_FUNC(Sky);
 	virtual bool init();
+
 private:
 	CCSprite* _background;
 	Terrain * _terrain;
 	b2World * _world;
 	Hero * _hero;
 	bool _tapDown;
+	GLESDebugDraw * _debugDraw;
 
 	ccColor4F randomBrightColor();
 	CCSprite* spriteWithColor(ccColor4F bgColor, float textureSize);
@@ -31,7 +33,9 @@ private:
 	void createTestBodyAtPostition(CCPoint position);
 
 	virtual void update(float delta);
+	virtual void ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent);
 	virtual void ccTouchesEnded(CCSet *pTouches, CCEvent *pEvent);
 	virtual void ccTouchesCancelled(CCSet *pTouches, CCEvent *pEvent);
+	void setupDebugDraw();
 };
 #endif
