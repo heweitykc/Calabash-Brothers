@@ -33,9 +33,9 @@ private:
 	void createTestBodyAtPostition(CCPoint position);
 
 	virtual void update(float delta);
-	virtual void ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent);
-	virtual void ccTouchesEnded(CCSet *pTouches, CCEvent *pEvent);
-	virtual void ccTouchesCancelled(CCSet *pTouches, CCEvent *pEvent);
+	virtual void onTouchesBegan(const std::vector<Touch*>& touches, Event *unused_event);
+	virtual void onTouchesMoved(const std::vector<Touch*>& touches, Event *unused_event);
+	virtual void onTouchesEnded(const std::vector<Touch*>& touches, Event *unused_event);
 	void setupDebugDraw();
 };
 #endif

@@ -47,7 +47,7 @@ public:
 	void generateHills();
 	void resetHillVertices();	
 
-	virtual void draw();	
+	virtual void draw(Renderer *renderer, const Mat4 &transform, uint32_t flags) override;
 };
 
 #endif

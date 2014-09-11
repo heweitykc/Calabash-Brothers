@@ -68,12 +68,12 @@ void Hero::wake()
 {
 	_awake = true;
 	_body->SetActive(true);
-	_body->ApplyLinearImpulse(b2Vec2(1, 2), _body->GetPosition());
+	_body->ApplyLinearImpulse(b2Vec2(1, 2), _body->GetPosition(),true);
 }
 
 void Hero::dive()
 {
-	_body->ApplyForce(b2Vec2(5, -50), _body->GetPosition());
+	_body->ApplyForce(b2Vec2(5, -150), _body->GetPosition(), true);
 }
 
 void Hero::limitVelocity()

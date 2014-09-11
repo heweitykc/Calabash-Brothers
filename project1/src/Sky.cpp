@@ -115,19 +115,19 @@ void Sky::update(float delta)
 	_terrain->setOffsetX(offset);
 }
 
-void Sky::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent)
+void Sky::onTouchesBegan(const std::vector<Touch*>& touches, Event *unused_event)
 {
 	CCLOG("ccTouchesBegan");
 	genBackground();
 	_tapDown = true;
 }
 
-void Sky::ccTouchesEnded(CCSet *pTouches, CCEvent *pEvent)
+void Sky::onTouchesMoved(const std::vector<Touch*>& touches, Event *unused_event)
 {
 	_tapDown = false;
 }
 
-void Sky::ccTouchesCancelled(CCSet *pTouches, CCEvent *pEvent)
+void Sky::onTouchesEnded(const std::vector<Touch*>& touches, Event *unused_event)
 {
 	_tapDown = true;
 }

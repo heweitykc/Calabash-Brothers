@@ -14,9 +14,11 @@ AppDelegate::~AppDelegate()
 bool AppDelegate::applicationDidFinishLaunching() {
     // initialize director
     CCDirector* pDirector = CCDirector::sharedDirector();
-    CCEGLView* pEGLView = CCEGLView::sharedOpenGLView();
-
-    pDirector->setOpenGLView(pEGLView);
+	CCEGLView* pEGLView = pDirector->getOpenGLView();
+	if (!pEGLView) {
+		pEGLView = GLView::create("tiny swing!");
+		pDirector->setOpenGLView(pEGLView);
+	}
 	
     // turn on display FPS
     pDirector->setDisplayStats(false);
