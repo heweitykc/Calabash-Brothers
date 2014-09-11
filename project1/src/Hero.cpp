@@ -73,7 +73,7 @@ void Hero::wake()
 
 void Hero::dive()
 {
-	_body->ApplyForce(b2Vec2(5, -150), _body->GetPosition(), true);
+	_body->ApplyForce(b2Vec2(5, -50), _body->GetPosition(), true);
 }
 
 void Hero::limitVelocity()
@@ -82,6 +82,7 @@ void Hero::limitVelocity()
 
 	const float minVelocityX = 5;
 	const float minVelocityY = -40;
+
 	b2Vec2 vel = _body->GetLinearVelocity();
 	if (vel.x < minVelocityX) {
 		vel.x = minVelocityX;

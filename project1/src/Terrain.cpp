@@ -132,8 +132,7 @@ void Terrain::initWithWorld(b2World *world)
 }
 
 void Terrain::draw(Renderer *renderer, const Mat4 &transform, uint32_t flags)
-{
-	CCNode::draw(renderer, transform, flags);
+{	
 	_world->DrawDebugData();
 }
 
