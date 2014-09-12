@@ -13,13 +13,14 @@ using namespace ui;
 class MainLogic :public CCLayer, public WebSocket::Delegate
 {
 public:
-
 	MainLogic();
 	~MainLogic();
 
 	virtual bool init();  
 	static CCScene* scene();
 	CREATE_FUNC(MainLogic);
+
+	void start();
 
 	virtual void onOpen(WebSocket* ws);
 	virtual void onMessage(WebSocket* ws, const WebSocket::Data& data);
@@ -39,6 +40,7 @@ public:
 	void walk_time( float dt);
 	void Call_SelectTime();
 	void LV_logic(float dt);
+
 public:
 	CCSize winSize;
 
@@ -49,7 +51,6 @@ public:
 	char label_char[11];
 	int label_int[3];
 	CCParticleSun* par;
-
 
 	CCSprite * value_image[11];
 	char map_page [11];
@@ -80,5 +81,6 @@ public:
 	int isLvUi_int;    //显示升级界面的  倒计时
 
 	WebSocket* _wsiSendText;
+	UILabel *_msglb;
 };
 #endif

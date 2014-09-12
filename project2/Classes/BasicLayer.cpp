@@ -3,10 +3,20 @@
 
 
 //  这个类 是一个辅助类， 里面申请了一些 共有变量， 那个类都能调用
-
-int Game_Time;
-int Value; 
-
+vector<string> split(string& str, const char* c)
+{
+	char *cstr, *p;
+	vector<string> res;
+	cstr = new char[str.size() + 1];
+	strcpy(cstr,str.c_str());
+	p = strtok(cstr,c);
+	while (p != NULL)
+	{
+		res.push_back(p);
+		p = strtok(NULL, c);
+	}
+	return res;
+}
 
 // 音效  音乐
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)

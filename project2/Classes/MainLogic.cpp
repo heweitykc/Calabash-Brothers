@@ -1,91 +1,109 @@
-#include "MainLogic.h"
+ï»¿#include "MainLogic.h"
 #include "BasicLayer.h"
 #include "SelectValue.h"
+#include "GlobalApp.h"
 #include "SimpleAudioEngine.h"
 
 using namespace ui;
 
-// Õâ¸öÀàÊÇÓÎÏ·ÖĞµÄ½çÃæ£¬Ö÷Âß¼­
+// è¿™ä¸ªç±»æ˜¯æ¸¸æˆä¸­çš„ç•Œé¢ï¼Œä¸»é€»è¾‘
 MainLogic::MainLogic()
 {
-	winSize = CCDirector::sharedDirector()->getWinSize();  //  »ñÈ¡ÆÁÄ»´óĞ¡
-	this->setKeypadEnabled(true);  //  ¿ªÆô·µ»Ø¼ü
-	CCDirector::sharedDirector()->getTouchDispatcher()->addTargetedDelegate(this,0,false);        //Ìí¼Ó´¥ÃşÏìÓ¦ÊÂ¼ş//
+	winSize = CCDirector::sharedDirector()->getWinSize();  //  è·å–å±å¹•å¤§å°
+	this->setKeypadEnabled(true);  //  å¼€å¯è¿”å›é”®
+	CCDirector::sharedDirector()->getTouchDispatcher()->addTargetedDelegate(this,0,false);        //æ·»åŠ è§¦æ‘¸å“åº”äº‹ä»¶//
+}
 
-	minute_int = Game_Time-1;
+void MainLogic::start()
+{
+	Select();
+
+	minute_int = GlobalApp::Game_Time - 1;
 	second_int = 60;
 
-	schedule(schedule_selector(MainLogic::walk_time),1);   // Ê±¼ä±ä»¯µÄschedule(schedule_selector£©£»
-	schedule(schedule_selector(MainLogic::LV_logic),0.016);   //   ¼ì²âÉı¼¶
-
-	_wsiSendText = new WebSocket();
-	_wsiSendText->init(*this, "ws://115.28.42.84:8201");
+	schedule(schedule_selector(MainLogic::walk_time), 1);   // æ—¶é—´å˜åŒ–çš„schedule(schedule_selectorï¼‰ï¼›
+	schedule(schedule_selector(MainLogic::LV_logic), 0.016);   //   æ£€æµ‹å‡çº§
 }
+
 MainLogic::~MainLogic()
 {
+	if (_wsiSendText == NULL) return;
+	_wsiSendText->close();	
+	delete _wsiSendText;
 }
-bool MainLogic::init()  //³õÊ¼»¯³¡¾°
+bool MainLogic::init()  //åˆå§‹åŒ–åœºæ™¯
 {
 	if ( !CCLayer::init() )
 	{
 		return false;
 	}
-	Init();
-	Select();
+	Init();	
+
+	if (GlobalApp::mode == 0){
+		_wsiSendText = NULL;
+		start();
+	}
+	else {
+		_wsiSendText = new WebSocket();
+		_wsiSendText->init(*this, "ws://115.28.42.84:8201");
+		CCLOG("connect");
+	}
 	return true;
 }
-void MainLogic::Init()  // ³õÊ¼»¯
+void MainLogic::Init()  // åˆå§‹åŒ–
 {
 	Down_id = 0;
 	for ( int i =0 ; i<3 ;i++)
 	{
 		label_int[i] = 0;
 	}
-	Key_open = false;  // °´¼üµÄ¿ª¹Ø
+	Key_open = false;  // æŒ‰é”®çš„å¼€å…³
 	Time_open = true;
 
-	LV = 0;   //µ±Ç°µÈ¼¶
-	KongZhi_Lvup = 0;// Íê³ÉÉı¼¶µÄ±äÁ¿
-	delayed = 0;   //  µ±¿ÉÒÔÉı¼¶Ê±µÄ Ê±¼ä»º³å±äÁ¿
-	isLvUi_show = false;  //  ÏÔÊ¾Éı¼¶½çÃæµÄ  ¿ª¹Ø
-	isLvUi_int = 100;    //ÏÔÊ¾Éı¼¶½çÃæµÄ  µ¹¼ÆÊ±
+	LV = 0;   //å½“å‰ç­‰çº§
+	KongZhi_Lvup = 0;// å®Œæˆå‡çº§çš„å˜é‡
+	delayed = 0;   //  å½“å¯ä»¥å‡çº§æ—¶çš„ æ—¶é—´ç¼“å†²å˜é‡
+	isLvUi_show = false;  //  æ˜¾ç¤ºå‡çº§ç•Œé¢çš„  å¼€å…³
+	isLvUi_int = 100;    //æ˜¾ç¤ºå‡çº§ç•Œé¢çš„  å€’è®¡æ—¶
 
 
 	m_pUiLayer = UILayer::create();
 	m_pUiLayer->scheduleUpdate();
 	addChild(m_pUiLayer,0,0);
 
-	// ¼ÓÔØ Ö÷ÓÎÏ·±³¾°µÄ josnÎÄ¼ş ,
+	// åŠ è½½ ä¸»æ¸¸æˆèƒŒæ™¯çš„ josnæ–‡ä»¶ ,
 	mainLogic = dynamic_cast<Layout*>(GUIReader::shareReader()->widgetFromJsonFile("WBOne_MainLogic_1/WBOne_MainLogic_1.json"));
 	m_pUiLayer->addWidget(mainLogic);
 
 	for ( int i = 0; i<3; i++)
 	{
-		label[i] = dynamic_cast<UILabelAtlas*>(mainLogic->getChildByName("Panel")->getChildByTag(i + 200));      // »ñµÃ³¡¾°µÄ Èı¸öÊı×Ö±êÇ©£¬·Ö±ğÊÇÒÑ´ğ£¬ÕıÈ·£¬´íÎó
+		label[i] = dynamic_cast<UILabelAtlas*>(mainLogic->getChildByName("Panel")->getChildByTag(i + 200));      // è·å¾—åœºæ™¯çš„ ä¸‰ä¸ªæ•°å­—æ ‡ç­¾ï¼Œåˆ†åˆ«æ˜¯å·²ç­”ï¼Œæ­£ç¡®ï¼Œé”™è¯¯
 		sprintf(label_char,"%d",label_int[i]);
 		label[i] ->setStringValue(label_char);
-
 	}
 
-	Quit_niu = dynamic_cast<UIButton*>(mainLogic->getChildByName("Panel")->getChildByTag(100));	//»ñµÃ ³¡¾°µÄ ÍË³ö°´Å¥
+	Quit_niu = dynamic_cast<UIButton*>(mainLogic->getChildByName("Panel")->getChildByTag(100));	//è·å¾— åœºæ™¯çš„ é€€å‡ºæŒ‰é’®
 	Quit_niu->setPressedActionEnabled(true);	
-	Quit_niu->addTouchEventListener(this, toucheventselector(MainLogic::callBack)); // ¸ø ÍË³ö°´Å¥¼ÓÈë»Øµ÷	
+	Quit_niu->addTouchEventListener(this, toucheventselector(MainLogic::callBack)); // ç»™ é€€å‡ºæŒ‰é’®åŠ å…¥å›è°ƒ	
 
-	label_minute = dynamic_cast<UILabelAtlas*>(mainLogic->getChildByName("Panel")->getChildByName("ImageView")->getChildByTag(1000));       //»ñµÃ  Ê±¼ä ·Ö µÄ Êı×Ö±êÇ©
+	label_minute = dynamic_cast<UILabelAtlas*>(mainLogic->getChildByName("Panel")->getChildByName("ImageView")->getChildByTag(1000));       //è·å¾—  æ—¶é—´ åˆ† çš„ æ•°å­—æ ‡ç­¾
 	sprintf(minute_char,"%d",minute_int);
 	label_minute->setStringValue(minute_char);
 
-	label_second = dynamic_cast<UILabelAtlas*>(mainLogic->getChildByName("Panel")->getChildByName("ImageView")->getChildByTag(1001));           //»ñµÃ  Ê±¼ä Ãë µÄ Êı×Ö±êÇ©
+	label_second = dynamic_cast<UILabelAtlas*>(mainLogic->getChildByName("Panel")->getChildByName("ImageView")->getChildByTag(1001));           //è·å¾—  æ—¶é—´ ç§’ çš„ æ•°å­—æ ‡ç­¾
 	sprintf(second_char,"%d",second_int);
 	label_second->setStringValue(second_char);
 
-	//============================ÒÔÏÂÊÇ¹ØÓÚ½±ÀøµÄ
+	_msglb = dynamic_cast<UILabel*>(mainLogic->getChildByName("Panel")->getChildByTag(188));
+	_msglb->setText("msg...");
+
+	//============================ä»¥ä¸‹æ˜¯å…³äºå¥–åŠ±çš„
 
 	UILayer * m_pUiLayer1 = UILayer::create();
 	m_pUiLayer1->scheduleUpdate();
 	addChild(m_pUiLayer1,5,0);
 
-	// ¼ÓÔØ µÃµ½½±ÀøµÄ josnÎÄ¼ş
+	// åŠ è½½ å¾—åˆ°å¥–åŠ±çš„ josnæ–‡ä»¶
 	Lvup = dynamic_cast<Layout*>(GUIReader::shareReader()->widgetFromJsonFile("WB_Lvup_1/WB_Lvup_1.json"));
 	m_pUiLayer1->addWidget(Lvup);
 	UIButton * lv_niu[2];
@@ -110,16 +128,16 @@ void MainLogic::Init()  // ³õÊ¼»¯
 	m_emitter->setLife(3.5f);
 }
 
-void MainLogic::Select()      // Ñ¡Ôñ ÊıÖµ  º¯Êı
+void MainLogic::Select()      // é€‰æ‹© æ•°å€¼  å‡½æ•°
 {
-	//ÉèÖÃÊ±¼äÖÖ×Ó £¬¿ÉÒÔÊ¹ÓÃËæ»úÊı
+	//è®¾ç½®æ—¶é—´ç§å­ ï¼Œå¯ä»¥ä½¿ç”¨éšæœºæ•°
 	cc_timeval psv;
 	CCTime::gettimeofdayCocos2d(&psv, NULL);
 	unsigned long int seed = psv.tv_sec*1000 + psv.tv_usec/1000;
 	srand(seed);
 
 	
-	if ( Value == 1)    //   µ±ValueÖµµÈÓÚ1Ê±£¬ÓÒ±ßÊÇ1-5.
+	if (GlobalApp::Value == 1)    //   å½“Valueå€¼ç­‰äº1æ—¶ï¼Œå³è¾¹æ˜¯1-5.
 	{
 		for ( int i=1;i<6;i++)
 		{
@@ -135,13 +153,13 @@ void MainLogic::Select()      // Ñ¡Ôñ ÊıÖµ  º¯Êı
 				value_image[i]->setPosition(ccp(460+((i-4)*120),300));
 			}
 		}
-		typ =CCRANDOM_0_1()*5+1;                  // °Ñ×ó±ßµÄÊı Ëæ»úÔÚ1-5Ö®¼ä
+		typ =CCRANDOM_0_1()*5+1;                  // æŠŠå·¦è¾¹çš„æ•° éšæœºåœ¨1-5ä¹‹é—´
 		sprintf(map_page,"picc%d.png",typ);
 		Image = CCSprite::create(map_page);
 		addChild(Image);
 		Image->setPosition(ccp( 150 , 240));
 	}
-	if ( Value == 2)    //   µ±ValueÖµµÈÓÚ2Ê±£¬ÓÒ±ßÊÇ6-10.
+	if (GlobalApp::Value == 2)    //   å½“Valueå€¼ç­‰äº2æ—¶ï¼Œå³è¾¹æ˜¯6-10.
 	{
 		for ( int i=6;i<11;i++)
 		{
@@ -157,13 +175,13 @@ void MainLogic::Select()      // Ñ¡Ôñ ÊıÖµ  º¯Êı
 				value_image[i]->setPosition(ccp(460+((i-9)*120),300));
 			}
 		}
-		typ =CCRANDOM_0_1()*5+6;           // °Ñ×ó±ßµÄÊı Ëæ»úÔÚ6-10Ö®¼ä
+		typ =CCRANDOM_0_1()*5+6;           // æŠŠå·¦è¾¹çš„æ•° éšæœºåœ¨6-10ä¹‹é—´
 		sprintf(map_page,"picc%d.png",typ);
 		Image = CCSprite::create(map_page);
 		addChild(Image);
 		Image->setPosition(ccp( 150 , 240));
 	}
-	if ( Value == 3)    //   µ±ValueÖµµÈÓÚ3Ê±£¬ÓÒ±ßÊÇ1-10.
+	if (GlobalApp::Value == 3)    //   å½“Valueå€¼ç­‰äº3æ—¶ï¼Œå³è¾¹æ˜¯1-10.
 	{
 		for ( int i=1;i<11;i++)
 		{
@@ -187,7 +205,7 @@ void MainLogic::Select()      // Ñ¡Ôñ ÊıÖµ  º¯Êı
 				value_image[i]->setPosition(ccp(520,384));
 			}
 		}
-		typ =CCRANDOM_0_1()*10+1;         // °Ñ×ó±ßµÄÊı Ëæ»úÔÚ1-10Ö®¼ä
+		typ =CCRANDOM_0_1()*10+1;         // æŠŠå·¦è¾¹çš„æ•° éšæœºåœ¨1-10ä¹‹é—´
 		sprintf(map_page,"picc%d.png",typ);
 		Image = CCSprite::create(map_page);
 		addChild(Image);
@@ -198,7 +216,7 @@ void MainLogic::Select()      // Ñ¡Ôñ ÊıÖµ  º¯Êı
 void MainLogic::LV_logic(float dt)
 {
 
-	if ( isLvUi_show == true)         // µ±³öÏÖ µÃµ½½±ÀøµÄ ½çÃæºó£¬isLvUi_int¼õÉÙ£¬»¹Ô­³ÉÔ­Ñù
+	if ( isLvUi_show == true)         // å½“å‡ºç° å¾—åˆ°å¥–åŠ±çš„ ç•Œé¢åï¼ŒisLvUi_intå‡å°‘ï¼Œè¿˜åŸæˆåŸæ ·
 	{
 		isLvUi_int -- ;
 		if ( isLvUi_int <=0)
@@ -210,7 +228,7 @@ void MainLogic::LV_logic(float dt)
 			isLvUi_int = 0;
 		}
 	}
-	for ( int i = LV;  i<3; i++)         // µ±Âú×ã µÃµ½½±ÀøµÄ »ı·ÖÊ±
+	for ( int i = LV;  i<3; i++)         // å½“æ»¡è¶³ å¾—åˆ°å¥–åŠ±çš„ ç§¯åˆ†æ—¶
 	{
 		if( KongZhi_Lvup >= 10+i*5)
 		{
@@ -232,7 +250,7 @@ void MainLogic::LV_logic(float dt)
 		}
 	}
 }
-void MainLogic::walk_time(float dt)  //  ¿ØÖÆÊ±¼ä¼õÉÙ
+void MainLogic::walk_time(float dt)  //  æ§åˆ¶æ—¶é—´å‡å°‘
 {
 	second_int -=1;
 	if ( second_int ==15 && minute_int ==0)
@@ -291,18 +309,18 @@ void MainLogic::walk_time(float dt)  //  ¿ØÖÆÊ±¼ä¼õÉÙ
 	label_minute->setStringValue(minute_char);
 
 }
-bool MainLogic::ccTouchBegan(cocos2d::CCTouch * pTouch,cocos2d::CCEvent *pEvent)  // ´¥±Ê°´ÏÂ»Øµ÷
+bool MainLogic::ccTouchBegan(cocos2d::CCTouch * pTouch,cocos2d::CCEvent *pEvent)  // è§¦ç¬”æŒ‰ä¸‹å›è°ƒ
 {
 	CCPoint location = pTouch->getLocationInView();  
-	//½«´¥Ãşµã×ª»»ÎªGL×ø±êÏµµÄµã  
+	//å°†è§¦æ‘¸ç‚¹è½¬æ¢ä¸ºGLåæ ‡ç³»çš„ç‚¹  
 	location = CCDirector::sharedDirector()->convertToGL(location);  
 	
 
-	if ( Value == 1)
+	if (GlobalApp::Value == 1)
 	{
 		for ( int i =1; i<6; i++)
 		{
-			if (value_image[i]->boundingBox().containsPoint(location) && Key_open == false)       // µ±µã»÷µÄ ÊÇÕâ5¸öÊıÀïÃæµÄ ÆäÖĞÒ»¸öÊ±
+			if (value_image[i]->boundingBox().containsPoint(location) && Key_open == false)       // å½“ç‚¹å‡»çš„ æ˜¯è¿™5ä¸ªæ•°é‡Œé¢çš„ å…¶ä¸­ä¸€ä¸ªæ—¶
 			{
 				CCScaleTo * a = CCScaleTo::create(0.2f,1.5f,1.5f);
 				CCScaleTo * b = CCScaleTo::create(0.2f,1.0f,1.0f);
@@ -315,11 +333,11 @@ bool MainLogic::ccTouchBegan(cocos2d::CCTouch * pTouch,cocos2d::CCEvent *pEvent)
 			}
 		}
 	}
-	if ( Value == 2)
+	if (GlobalApp::Value == 2)
 	{
 		for ( int i =6; i<11; i++)
 		{
-			if (value_image[i]->boundingBox().containsPoint(location) && Key_open == false)        // µ±µã»÷µÄ ÊÇÕâ5¸öÊıÀïÃæµÄ ÆäÖĞÒ»¸öÊ±
+			if (value_image[i]->boundingBox().containsPoint(location) && Key_open == false)        // å½“ç‚¹å‡»çš„ æ˜¯è¿™5ä¸ªæ•°é‡Œé¢çš„ å…¶ä¸­ä¸€ä¸ªæ—¶
 			{
 				CCScaleTo * a = CCScaleTo::create(0.2f,1.5f,1.5f);
 				CCScaleTo * b = CCScaleTo::create(0.2f,1.0f,1.0f);
@@ -332,11 +350,11 @@ bool MainLogic::ccTouchBegan(cocos2d::CCTouch * pTouch,cocos2d::CCEvent *pEvent)
 			}
 		}
 	}
-	if ( Value == 3)
+	if (GlobalApp::Value == 3)
 	{
 		for ( int i =1; i<11; i++)
 		{
-			if (value_image[i]->boundingBox().containsPoint(location) && Key_open == false)   // µ±µã»÷µÄ ÊÇÕâ10¸öÊıÀïÃæµÄ ÆäÖĞÒ»¸öÊ±
+			if (value_image[i]->boundingBox().containsPoint(location) && Key_open == false)   // å½“ç‚¹å‡»çš„ æ˜¯è¿™10ä¸ªæ•°é‡Œé¢çš„ å…¶ä¸­ä¸€ä¸ªæ—¶
 			{
 				CCScaleTo * a = CCScaleTo::create(0.2f,1.5f,1.5f);
 				CCScaleTo * b = CCScaleTo::create(0.2f,1.0f,1.0f);
@@ -349,19 +367,18 @@ bool MainLogic::ccTouchBegan(cocos2d::CCTouch * pTouch,cocos2d::CCEvent *pEvent)
 			}
 		}
 	}
-
 	return false;
 }
-void MainLogic::ccTouchMoved(cocos2d::CCTouch *pTouch,cocos2d::CCEvent *pEvent)    //´¥±ÊÒÆ¶¯»Øµ÷
+void MainLogic::ccTouchMoved(cocos2d::CCTouch *pTouch,cocos2d::CCEvent *pEvent)    //è§¦ç¬”ç§»åŠ¨å›è°ƒ
 {
 
 }
-void MainLogic::ccTouchEnded(cocos2d::CCTouch *pTouch,cocos2d::CCEvent *pEvent)   //´¥±ÊÌ§Æğ»Øµ÷
+void MainLogic::ccTouchEnded(cocos2d::CCTouch *pTouch,cocos2d::CCEvent *pEvent)   //è§¦ç¬”æŠ¬èµ·å›è°ƒ
 {
 	BasicLayer basicLayer;
 	basicLayer.runNestSound(Down_id); 
 	CCLog("DDDDDDDDDD %d" , Down_id);
-	if ( Down_id == typ)  //µ±µã»÷µÄ ÊıÖµºÍ×ó±ßµÄ Êı ÏàÍ¬Ê±£¬ ²¥·ÅÌØĞ§£¬ÕıÈ·+1£¬
+	if ( Down_id == typ)  //å½“ç‚¹å‡»çš„ æ•°å€¼å’Œå·¦è¾¹çš„ æ•° ç›¸åŒæ—¶ï¼Œ æ’­æ”¾ç‰¹æ•ˆï¼Œæ­£ç¡®+1ï¼Œ
 	{
 		par = CCParticleSun::create();
 		this->addChild(par, 10);
@@ -372,34 +389,35 @@ void MainLogic::ccTouchEnded(cocos2d::CCTouch *pTouch,cocos2d::CCEvent *pEvent) 
 		//par->setStartColorVar(cccEnd);
 		//par->setEndColor(cccEnd);
 		//par->setEndColorVar(cccEnd);
-		par->runAction(CCSequence::create(a,CCCallFunc::create(this, callfunc_selector(MainLogic::Public_Call)),NULL)); //  ¸øÕâ¸öMoveTo¼ÓÈë»Øµ÷
+		par->runAction(CCSequence::create(a,CCCallFunc::create(this, callfunc_selector(MainLogic::Public_Call)),NULL)); //  ç»™è¿™ä¸ªMoveToåŠ å…¥å›è°ƒ
 
 		label_int[1] +=1;
 		sprintf(label_char,"%d",label_int[1]);
 		label[1] ->setStringValue(label_char);
-		Key_open = true;//  °´ÏÂ°´¼üºóKey_open = true£¬·ÀÖ¹ÖØ¸´°´
-
-		
-
+		Key_open = true;//  æŒ‰ä¸‹æŒ‰é”®åKey_open = trueï¼Œé˜²æ­¢é‡å¤æŒ‰
 	}
-	else   //µ±µã»÷µÄ ÊıÖµºÍ×ó±ßµÄ Êı ²»ÏàÍ¬Ê±£¬ ´íÎóÊı+1£¬
+	else   //å½“ç‚¹å‡»çš„ æ•°å€¼å’Œå·¦è¾¹çš„ æ•° ä¸ç›¸åŒæ—¶ï¼Œ é”™è¯¯æ•°+1ï¼Œ
 	{
 		label_int[2] +=1;
 		sprintf(label_char,"%d",label_int[2]);
 		label[2] ->setStringValue(label_char);
 	}
-	
+
+	char sendbuff[64] = {0};
+	sprintf(sendbuff, "V1,%s,%d,%d,%d", GlobalApp::uname->c_str(), label_int[0], label_int[1], label_int[2]);
+	std::string sendmsg(sendbuff);
+	_wsiSendText->send(sendmsg);
 }
 void MainLogic::Public_Call()  
 {
-	this->removeChild(Image,true);  // Ğ¶µô ×ó±ßµÄÍ¼Æ¬
-	this->removeChild(par,true);    // Ğ¶µô Á£×ÓĞ§¹û
+	this->removeChild(Image,true);  // å¸æ‰ å·¦è¾¹çš„å›¾ç‰‡
+	this->removeChild(par,true);    // å¸æ‰ ç²’å­æ•ˆæœ
 	Key_open = false;
 	KongZhi_Lvup +=1;
 
 
-	//ÒÔÏÂÊÇÖØĞÂ  ¹¹Ôì ¸ù¾İ value µÄÖµ´ÓĞÂ¹¹Ôì ×ó±ßµÄÍ¼Æ¬
-	if ( Value ==1)
+	//ä»¥ä¸‹æ˜¯é‡æ–°  æ„é€  æ ¹æ® value çš„å€¼ä»æ–°æ„é€  å·¦è¾¹çš„å›¾ç‰‡
+	if (GlobalApp::Value == 1)
 	{
 		typ =CCRANDOM_0_1()*5+1;
 		sprintf(map_page,"picc%d.png",typ);
@@ -407,7 +425,7 @@ void MainLogic::Public_Call()
 		addChild(Image);
 		Image->setPosition(ccp( 150 , 240));
 	}
-	if ( Value ==2)
+	if (GlobalApp::Value == 2)
 	{
 		typ =CCRANDOM_0_1()*5+6;
 		sprintf(map_page,"picc%d.png",typ);
@@ -415,7 +433,7 @@ void MainLogic::Public_Call()
 		addChild(Image);
 		Image->setPosition(ccp( 150 , 240));
 	}
-	if ( Value ==3)
+	if (GlobalApp::Value == 3)
 	{
 		typ =CCRANDOM_0_1()*10+1;
 		sprintf(map_page,"picc%d.png",typ);
@@ -427,18 +445,19 @@ void MainLogic::Public_Call()
 
 void MainLogic::Call_SelectTime()
 {
-	CCDirector::sharedDirector()->replaceScene(CCTransitionRotoZoom::create(0.5,SelectValue::scene())); //ÇĞ»»µ½Ö÷ÓÎÏ·½çÃælogic
+
+	CCDirector::sharedDirector()->replaceScene(CCTransitionRotoZoom::create(0.5,SelectValue::scene())); //åˆ‡æ¢åˆ°ä¸»æ¸¸æˆç•Œé¢logic
 }
 
 
 void MainLogic::callBack(CCObject* pSender, TouchEventType eventType)
 {
-	CCDirector::sharedDirector()->end(); // ÍË³ö ÓÎÏ·
+	CCDirector::sharedDirector()->end(); // é€€å‡º æ¸¸æˆ
 }
 
-//°²×¿ ·µ»Ø¼üµÄ»Øµ÷
+//å®‰å“ è¿”å›é”®çš„å›è°ƒ
 void MainLogic::keyBackClicked(){
-	CCDirector::sharedDirector()->replaceScene(CCTransitionRotoZoom::create(0.5,SelectValue::scene())); //ÇĞ»»µ½Ö÷ÓÎÏ·½çÃælogic
+	CCDirector::sharedDirector()->replaceScene(CCTransitionRotoZoom::create(0.5,SelectValue::scene())); //åˆ‡æ¢åˆ°ä¸»æ¸¸æˆç•Œé¢logic
 }
 CCScene * MainLogic::scene(){
 	CCScene *sc = CCScene::create();
@@ -449,19 +468,39 @@ CCScene * MainLogic::scene(){
 void MainLogic::onOpen(WebSocket* ws)
 {
 	CCLOG("conencted");
+	std::string sendmsg("S1,");	
+	sendmsg.append(GlobalApp::uname->c_str());
+	_wsiSendText->send(sendmsg);
 }
 
 void MainLogic::onMessage(WebSocket* ws, const WebSocket::Data& data)
 {
-	CCLOG("onMessage");
+	std::string str(data.bytes);
+	CCLOG("recv %s", data.bytes);
+	vector<string> vecs = split(str, ",");
+	//CCLOG("vecd=%s,%s", vecs[0].c_str(), vecs[1].c_str());
+
+	if (vecs[0] == "S1"){				//è¿›å…¥ç­‰å¾…
+		_msglb->setText("waitting...");
+		GlobalApp::Game_Time  = 1;
+		GlobalApp::Value = 1;
+		start();
+	} else if (vecs[0] == "D1"){		//
+		if (vecs[1].compare("1")){	//å¼€å§‹æ¸¸æˆ
+			start();
+		}
+	}
+	
 }
 
 void MainLogic::onClose(WebSocket* ws)
 {
 	CCLOG("onClose");
+
 }
 
 void MainLogic::onError(WebSocket* ws, const WebSocket::ErrorCode& error)
 {
 	CCLOG("onError");
+
 }

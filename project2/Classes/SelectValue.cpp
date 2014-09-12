@@ -1,13 +1,14 @@
-#include "SelectValue.h"
+ï»¿#include "SelectValue.h"
 #include "BasicLayer.h"
 #include "MainLogic.h"
+#include "GlobalApp.h"
 
 using namespace ui;
 
-//  Õâ¸öÀà ÊÇ Ñ¡ÔñÊ±¼ä,Ñ¡Ôñ¿ªÊ¼½áÊøÊıµÄ ½çÃæ
+//  è¿™ä¸ªç±» æ˜¯ é€‰æ‹©æ—¶é—´,é€‰æ‹©å¼€å§‹ç»“æŸæ•°çš„ ç•Œé¢
 SelectValue::SelectValue() 
 {
-
+	
 }
 SelectValue::~SelectValue()
 {
@@ -21,30 +22,28 @@ bool SelectValue::init()
 
 	Init();
 
-
 	return true;
 }
 
 void SelectValue::Init()
 {
-	Value = 0;
-	Game_Time = 1;
+	GlobalApp::Value = 0;
+	GlobalApp::Game_Time = 1;
 
 	UILayer* m_pUiLayer = UILayer::create();
 	m_pUiLayer->scheduleUpdate();
 	addChild(m_pUiLayer,0,0);
 
-	// ¼ÓÔØ Ñ¡ÔñÊ±¼äµÄ josnÎÄ¼ş
+	// åŠ è½½ é€‰æ‹©æ—¶é—´çš„ josnæ–‡ä»¶
 	Layout* m_time = dynamic_cast<Layout*>(GUIReader::shareReader()->widgetFromJsonFile("WBOne_Menu_1/WBOne_Menu_1.json"));
 	m_pUiLayer->addWidget(m_time);
 
-	// ÉêÇë±¾½çÃæµÄ °Ë¸ö°´Å¥£¬²¢Í¬ m_time josnÎÄ¼ş»ñµÃ£¬ÕâËÄ¸ö°´Å¥
-
-	for ( int i =0 ;i<9 ; i++)
+	// ç”³è¯·æœ¬ç•Œé¢çš„ å…«ä¸ªæŒ‰é’®ï¼Œå¹¶åŒ m_time josnæ–‡ä»¶è·å¾—ï¼Œè¿™å››ä¸ªæŒ‰é’®
+	for ( int i =0 ;i<10 ; i++)
 	{
 		m_time_niu[i] = dynamic_cast<UIButton*>(m_time->getChildByName("Panel")->getChildByTag(i+100));	
 		m_time_niu[i]->setPressedActionEnabled(true);
-		//m_time_niu[i]->addReleaseEvent(this,menu_selector(SelectValue::Callback));  // ¸øÕâËÄ¸ö°´Å¥¼ÓÈë»Øµ÷
+		//m_time_niu[i]->addReleaseEvent(this,menu_selector(SelectValue::Callback));  // ç»™è¿™å››ä¸ªæŒ‰é’®åŠ å…¥å›è°ƒ
 		m_time_niu[i]->addTouchEventListener(this, toucheventselector(SelectValue::Callback));
 	}
 	for ( int i =0 ;i<4 ; i++)
@@ -54,35 +53,41 @@ void SelectValue::Init()
 	}
 	time_view[0]->setVisible(true);
 
+	CCScale9Sprite* sacel9SprY = CCScale9Sprite::create("picc2.png");
+	_editbox = CCEditBox::create(CCSizeMake(100, 30), sacel9SprY);	
+	_editbox->setFontColor(ccc3(255,255,255));
+	_editbox->setPosition(ccp(700,110));
+	_editbox->setPlaceHolder("input yout name!!");
+	this->addChild(_editbox);
 }
 
-//  °´Å¥µÄ»Øµ÷·½·¨
+//  æŒ‰é’®çš„å›è°ƒæ–¹æ³•
 void SelectValue::Callback(CCObject* pSender, TouchEventType eventType)
 {
-	int  a  = dynamic_cast<UIButton*>(pSender)->getTag();  //  Í¨¹ı°´Å¥µÄtagÖµ£¬ÅĞ¶ÏÊÇµã»÷µÄÄÄ¸ö°´Å¥
+	int  a  = dynamic_cast<UIButton*>(pSender)->getTag();  //  é€šè¿‡æŒ‰é’®çš„tagå€¼ï¼Œåˆ¤æ–­æ˜¯ç‚¹å‡»çš„å“ªä¸ªæŒ‰é’®
 	switch (a)
 	{
-		//¿ªÊ¼ÓÎÏ·°´Å¥
+		//å¼€å§‹æ¸¸æˆæŒ‰é’®
 	case 100:   
 		m_time_niu[0]->setBright(false);
 		m_time_niu[1]->setBright(true);
 		m_time_niu[2]->setBright(true);
 
-		Value = 1;
+		GlobalApp::Value = 1;
 		break;  
-		//¿ªÊ¼Êı×ÖÑ¡ÔñµÄËÄ¸ö°´Å¥
-	case 101:    //¿ªÊ¼ºÅ1-5°´Å¥
+		//å¼€å§‹æ•°å­—é€‰æ‹©çš„å››ä¸ªæŒ‰é’®
+	case 101:    //å¼€å§‹å·1-5æŒ‰é’®
 		m_time_niu[1]->setBright(false);
 		m_time_niu[0]->setBright(true);
 		m_time_niu[2]->setBright(true);
 
-		Value = 2;
+		GlobalApp::Value = 2;
 		break;
-	case 102://¿ªÊ¼ºÅ6-9°´Å¥
+	case 102://å¼€å§‹å·6-9æŒ‰é’®
 		m_time_niu[2]->setBright(false);
 		m_time_niu[0]->setBright(true);
 		m_time_niu[1]->setBright(true);
-		Value = 3;
+		GlobalApp::Value = 3;
 		break;
 	case 103:
 		time_view[0]->setVisible(true);
@@ -90,42 +95,45 @@ void SelectValue::Callback(CCObject* pSender, TouchEventType eventType)
 		time_view[1]->setVisible(false);
 		time_view[2]->setVisible(false);
 		time_view[3]->setVisible(false);
-		Game_Time  =1;
+		GlobalApp::Game_Time  =1;
 		break;
 	case 104:
 		time_view[1]->setVisible(true);
 		time_view[0]->setVisible(false);
 		time_view[2]->setVisible(false);
 		time_view[3]->setVisible(false);
-		Game_Time = 2;
+		GlobalApp::Game_Time = 2;
 		break;
 	case 105:
 		time_view[2]->setVisible(true);
 		time_view[1]->setVisible(false);
 		time_view[0]->setVisible(false);
 		time_view[3]->setVisible(false);
-		Game_Time = 3;
+		GlobalApp::Game_Time = 3;
 		break;	
 	case 106:
 		time_view[3]->setVisible(true);
 		time_view[1]->setVisible(false);
 		time_view[2]->setVisible(false);
 		time_view[0]->setVisible(false);
-		Game_Time = 5;
+		GlobalApp::Game_Time = 5;
 		break;
 	case 107:
-		if ( Game_Time !=0 && Value != 0)   
+		if (GlobalApp::Game_Time != 0 && GlobalApp::Value != 0)
 		{
-			CCDirector::sharedDirector()->replaceScene(CCTransitionRotoZoom::create(0.5,MainLogic::scene())); //ÇĞ»»µ½Ö÷ÓÎÏ·½çÃælogic
+			GlobalApp::mode = 0;
+			CCDirector::sharedDirector()->replaceScene(CCTransitionRotoZoom::create(0.5,MainLogic::scene())); //åˆ‡æ¢åˆ°ä¸»æ¸¸æˆç•Œé¢logic
 		}
 		break;
 	case 108:
-		//ÍË³öÓÎÏ·
+		//é€€å‡ºæ¸¸æˆ
 		CCDirector::sharedDirector()->end();
 		break;
-	case 201:
-		//¾ºÈüÄ£Ê½
-
+	case 109:
+		//ç«èµ›æ¨¡å¼
+		GlobalApp::mode = 1;
+		GlobalApp::uname = new std::string(_editbox->getText());
+		CCDirector::sharedDirector()->replaceScene(CCTransitionRotoZoom::create(0.5, MainLogic::scene())); //åˆ‡æ¢åˆ°ä¸»æ¸¸æˆç•Œé¢logic
 		break;
 	}
 }

@@ -27,7 +27,6 @@ public:
 public:
 	UIButton * m_time_niu[9];
 	UIImageView * time_view[4];
-
-
+	CCEditBox* _editbox;
 };
 #endif

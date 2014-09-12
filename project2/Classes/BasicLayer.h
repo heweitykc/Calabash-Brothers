@@ -1,9 +1,10 @@
 #ifndef _BASICLAYER_H_
 #define _BASICLAYER_H_
+#include <string>
+#include <vector>
+using namespace std;
 
-extern  int Game_Time;  //    选择时间的 变量值
-extern 	int Value;   //  选择数值范围
-
+vector<string> split(string& str, const char* c);
 
 class BasicLayer
 {
