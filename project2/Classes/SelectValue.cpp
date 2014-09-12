@@ -34,31 +34,33 @@ void SelectValue::Init()
 	m_pUiLayer->scheduleUpdate();
 	addChild(m_pUiLayer,0,0);
 
-	// 加载 选择时间的 josn文件
+	// 加载 选择时间的 json文件
 	Layout* m_time = dynamic_cast<Layout*>(GUIReader::shareReader()->widgetFromJsonFile("WBOne_Menu_1/WBOne_Menu_1.json"));
 	m_pUiLayer->addWidget(m_time);
 
 	// 申请本界面的 八个按钮，并同 m_time josn文件获得，这四个按钮
-	for ( int i =0 ;i<10 ; i++)
-	{
+	for ( int i =0 ;i<9 ; i++){
 		m_time_niu[i] = dynamic_cast<UIButton*>(m_time->getChildByName("Panel")->getChildByTag(i+100));	
 		m_time_niu[i]->setPressedActionEnabled(true);
 		//m_time_niu[i]->addReleaseEvent(this,menu_selector(SelectValue::Callback));  // 给这四个按钮加入回调
 		m_time_niu[i]->addTouchEventListener(this, toucheventselector(SelectValue::Callback));
 	}
-	for ( int i =0 ;i<4 ; i++)
-	{
+
+	for ( int i =0 ;i<4 ; i++){
 		time_view[i] = dynamic_cast<UIImageView*>(m_time->getChildByName("Panel")->getChildByTag(i + 200));
 		time_view[i]->setVisible(false);
 	}
+
 	time_view[0]->setVisible(true);
 
+	/*
 	CCScale9Sprite* sacel9SprY = CCScale9Sprite::create("picc2.png");
 	_editbox = CCEditBox::create(CCSizeMake(100, 30), sacel9SprY);	
 	_editbox->setFontColor(ccc3(255,255,255));
 	_editbox->setPosition(ccp(700,110));
 	_editbox->setPlaceHolder("input yout name!!");
 	this->addChild(_editbox);
+	*/
 }
 
 //  按钮的回调方法
@@ -130,10 +132,6 @@ void SelectValue::Callback(CCObject* pSender, TouchEventType eventType)
 		CCDirector::sharedDirector()->end();
 		break;
 	case 109:
-		//竞赛模式
-		GlobalApp::mode = 1;
-		GlobalApp::uname = new std::string(_editbox->getText());
-		CCDirector::sharedDirector()->replaceScene(CCTransitionRotoZoom::create(0.5, MainLogic::scene())); //切换到主游戏界面logic
 		break;
 	}
 }

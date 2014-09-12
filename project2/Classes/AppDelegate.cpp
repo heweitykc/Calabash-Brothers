@@ -1,6 +1,6 @@
 #include "AppDelegate.h"
 #include "MainLogic.h"
-#include "SelectValue.h"
+#include "MainUI.h"
 
 USING_NS_CC;
 
@@ -28,7 +28,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	CCEGLView::sharedOpenGLView()->setDesignResolutionSize(800, 480, kResolutionExactFit );
 
     // create a scene. it's an autorelease object
-    CCScene *pScene = SelectValue::scene();
+	CCScene *pScene = MainUI::scene();
 
     // run
     pDirector->runWithScene(pScene);

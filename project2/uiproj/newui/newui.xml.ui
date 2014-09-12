@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<UIProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <filePath>D:\newcode\Calabash-Brothers\project2\uiproj\newui\newui.xml.ui</filePath>
+  <Version>1.2.0.1</Version>
+  <Name>newui</Name>
+  <ProjectDir>D:\newcode\Calabash-Brothers\project2\uiproj\newui</ProjectDir>
+  <JsonFileName>newui.json</JsonFileName>
+  <Resources>D:\newcode\Calabash-Brothers\project2\uiproj\newui\Resources</Resources>
+  <JsonFolder>D:\newcode\Calabash-Brothers\project2\uiproj\newui\Json</JsonFolder>
+  <JsonList>
+    <string>main.json</string>
+    <string>arena.json</string>
+  </JsonList>
+  <imageFileList />
+  <JsonSuffix>.json</JsonSuffix>
+  <CurrentUIJson>arena.json</CurrentUIJson>
+  <CanvasSize>
+    <Width>480</Width>
+    <Height>320</Height>
+  </CanvasSize>
+</UIProject>

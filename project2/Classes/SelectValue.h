@@ -25,8 +25,7 @@ public:
 	void Callback(CCObject* pSender, TouchEventType eventType);
 
 public:
-	UIButton * m_time_niu[9];
-	UIImageView * time_view[4];
-	CCEditBox* _editbox;
+	UIButton *m_time_niu[9];
+	UIImageView *time_view[4];
 };
 #endif

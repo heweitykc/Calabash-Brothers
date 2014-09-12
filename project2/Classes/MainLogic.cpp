@@ -23,6 +23,9 @@ void MainLogic::start()
 
 	schedule(schedule_selector(MainLogic::walk_time), 1);   // 时间变化的schedule(schedule_selector）；
 	schedule(schedule_selector(MainLogic::LV_logic), 0.016);   //   检测升级
+
+	m_pUiLayer->setVisible(true);
+	_msglb->setVisible(false);
 }
 
 MainLogic::~MainLogic()
@@ -94,8 +97,11 @@ void MainLogic::Init()  // 初始化
 	sprintf(second_char,"%d",second_int);
 	label_second->setStringValue(second_char);
 
-	_msglb = dynamic_cast<UILabel*>(mainLogic->getChildByName("Panel")->getChildByTag(188));
-	_msglb->setText("msg...");
+	_msglb = UILabel::create();
+	_msglb->setText("");
+	_msglb->setColor(ccc3(255, 255, 255));
+	_msglb->setPosition(ccp(400,250));
+	this->addChild(_msglb);
 
 	//============================以下是关于奖励的
 
@@ -126,6 +132,8 @@ void MainLogic::Init()  // 初始化
 	m_emitter->setPosition(ccp(400,410));
 	addChild(m_emitter,10);
 	m_emitter->setLife(3.5f);
+
+	m_pUiLayer->setVisible(false);
 }
 
 void MainLogic::Select()      // 选择 数值  函数
@@ -377,7 +385,7 @@ void MainLogic::ccTouchEnded(cocos2d::CCTouch *pTouch,cocos2d::CCEvent *pEvent) 
 {
 	BasicLayer basicLayer;
 	basicLayer.runNestSound(Down_id); 
-	CCLog("DDDDDDDDDD %d" , Down_id);
+	CCLog("ccTouchEnded = %d" , Down_id);
 	if ( Down_id == typ)  //当点击的 数值和左边的 数 相同时， 播放特效，正确+1，
 	{
 		par = CCParticleSun::create();
@@ -404,7 +412,7 @@ void MainLogic::ccTouchEnded(cocos2d::CCTouch *pTouch,cocos2d::CCEvent *pEvent) 
 	}
 
 	char sendbuff[64] = {0};
-	sprintf(sendbuff, "V1,%s,%d,%d,%d", GlobalApp::uname->c_str(), label_int[0], label_int[1], label_int[2]);
+	sprintf(sendbuff, "*V1,%s,%d,%d,%d", GlobalApp::uname->c_str(), label_int[0], label_int[1], label_int[2]);
 	std::string sendmsg(sendbuff);
 	_wsiSendText->send(sendmsg);
 }
@@ -468,7 +476,7 @@ CCScene * MainLogic::scene(){
 void MainLogic::onOpen(WebSocket* ws)
 {
 	CCLOG("conencted");
-	std::string sendmsg("S1,");	
+	std::string sendmsg("*S1,");	
 	sendmsg.append(GlobalApp::uname->c_str());
 	_wsiSendText->send(sendmsg);
 }
@@ -480,13 +488,12 @@ void MainLogic::onMessage(WebSocket* ws, const WebSocket::Data& data)
 	vector<string> vecs = split(str, ",");
 	//CCLOG("vecd=%s,%s", vecs[0].c_str(), vecs[1].c_str());
 
-	if (vecs[0] == "S1"){				//进入等待
-		_msglb->setText("waitting...");
+	if (vecs[0] == "*S1"){				//进入等待
+		_msglb->setText("waitting others join...");
 		GlobalApp::Game_Time  = 1;
-		GlobalApp::Value = 1;
-		start();
-	} else if (vecs[0] == "D1"){		//
-		if (vecs[1].compare("1")){	//开始游戏
+		GlobalApp::Value = 1;		
+	} else if (vecs[0] == "*D1"){		//
+		if (vecs[1].compare("1")){		//开始游戏
 			start();
 		}
 	}
