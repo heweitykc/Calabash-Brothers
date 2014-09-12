@@ -492,10 +492,8 @@ void MainLogic::onMessage(WebSocket* ws, const WebSocket::Data& data)
 		_msglb->setText("waitting others join...");
 		GlobalApp::Game_Time  = 1;
 		GlobalApp::Value = 1;		
-	} else if (vecs[0] == "*D1"){		//
-		if (vecs[1].compare("1")){		//开始游戏
-			start();
-		}
+	} else if (vecs[0] == "*D1"){
+		start();//开始游戏
 	}
 	
 }
