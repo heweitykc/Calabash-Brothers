@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<UIProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Version>1.0.2.0</Version>
+  <Name>WBOne_Menu</Name>
+  <ProjectDir>G:\Tolls\cocosStudioWENJIAN\WBOne_Menu</ProjectDir>
+  <JsonFileName>WBOne_Menu.json</JsonFileName>
+  <Resources>G:\Tolls\cocosStudioWENJIAN\WBOne_Menu\Resources</Resources>
+  <JsonFolder>G:\Tolls\cocosStudioWENJIAN\WBOne_Menu\Json</JsonFolder>
+  <JsonList>
+    <string>WBOne_Menu_1.json</string>
+  </JsonList>
+  <imageFileList />
+  <JsonSuffix>.json</JsonSuffix>
+  <CurrentUIJson>WBOne_Menu_1.json</CurrentUIJson>
+  <CanvasSize>
+    <Width>800</Width>
+    <Height>480</Height>
+  </CanvasSize>
+</UIProject>

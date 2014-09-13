@@ -1,21 +1,24 @@
 <?xml version="1.0"?>
 <UIProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <filePath>D:\newcode\Calabash-Brothers\project2\uiproj\newui\newui.xml.ui</filePath>
-  <Version>1.2.0.1</Version>
+  <ProjectDir>E:\newcode\Calabash-Brothers\project2\uiproj\newui</ProjectDir>
+  <Version>1.5.0.0</Version>
+  <Resources>E:\newcode\Calabash-Brothers\project2\uiproj\newui\Resources</Resources>
   <Name>newui</Name>
-  <ProjectDir>D:\newcode\Calabash-Brothers\project2\uiproj\newui</ProjectDir>
   <JsonFileName>newui.json</JsonFileName>
-  <Resources>D:\newcode\Calabash-Brothers\project2\uiproj\newui\Resources</Resources>
-  <JsonFolder>D:\newcode\Calabash-Brothers\project2\uiproj\newui\Json</JsonFolder>
+  <JsonFolder>E:\newcode\Calabash-Brothers\project2\uiproj\newui\Json</JsonFolder>
   <JsonList>
-    <string>main.json</string>
     <string>arena.json</string>
+    <string>main.json</string>
   </JsonList>
-  <imageFileList />
-  <JsonSuffix>.json</JsonSuffix>
-  <CurrentUIJson>arena.json</CurrentUIJson>
   <CanvasSize>
     <Width>480</Width>
     <Height>320</Height>
   </CanvasSize>
+  <filePath>E:\newcode\Calabash-Brothers\project2\uiproj\newui\newui.xml.ui</filePath>
+  <ProjectType>UIProject</ProjectType>
+  <ResRelativePath />
+  <imageFileList />
+  <imagePngList />
+  <JsonSuffix>.json</JsonSuffix>
+  <CurrentUIJson>arena.json</CurrentUIJson>
 </UIProject>
