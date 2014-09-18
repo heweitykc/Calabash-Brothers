@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<AnimationProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <filePath>D:\newcode\Calabash-Brothers\project3\cocoproj\armature0\armature0.xml.animation</filePath>
+  <Version>1.2.0.1</Version>
+  <Name>armature0</Name>
+  <ProjectDir>D:\newcode\Calabash-Brothers\project3\cocoproj\armature0</ProjectDir>
+  <JsonFileName>armature0.json</JsonFileName>
+  <Resources>D:\newcode\Calabash-Brothers\project3\cocoproj\armature0\Resources</Resources>
+  <JsonFolder>D:\newcode\Calabash-Brothers\project3\cocoproj\armature0\Json</JsonFolder>
+  <JsonList />
+  <ResourceFileList>
+    <string>resources/armature/hero0.plist</string>
+    <string>D:\newcode\Calabash-Brothers\project3\cocoproj\armature0\Resources\resources/armature/hero0.plist</string>
+    <string>newres/hero1.plist</string>
+  </ResourceFileList>
+  <CanvasSize>
+    <Width>0</Width>
+    <Height>0</Height>
+  </CanvasSize>
+  <bBatchImage>false</bBatchImage>
+</AnimationProject>

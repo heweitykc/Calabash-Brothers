@@ -1,0 +1,97 @@
+{
+  "content_scale": 1.0,
+  "armature_data": [
+    {
+      "strVersion": "1.2.0.1",
+      "version": 1.201,
+      "name": "armature0",
+      "bone_data": [
+        {
+          "name": "Layer6",
+          "parent": "",
+          "x": -35.0,
+          "y": 31.17333984375,
+          "z": 2,
+          "cX": 0.754912257,
+          "cY": -0.8399999,
+          "kX": -1.12255871,
+          "kY": 1.12255871,
+          "arrow_x": 167.28720092773438,
+          "arrow_y": 1.2663542293012142E-05,
+          "effectbyskeleton": true
+        },
+        {
+          "name": "Layer5",
+          "parent": "",
+          "x": 29.0,
+          "y": 154.17333984375,
+          "z": 1,
+          "cX": 0.718260169,
+          "cY": -1.18000185,
+          "kX": -0.80405134,
+          "kY": 0.80405134,
+          "arrow_x": 166.82026672363281,
+          "arrow_y": 8.41422297526151E-06,
+          "effectbyskeleton": true
+        }
+      ]
+    }
+  ],
+  "animation_data": [
+    {
+      "name": "armature0",
+      "mov_data": [
+        {
+          "name": "Animation1",
+          "dr": 1,
+          "lp": true,
+          "to": 0,
+          "drTW": 0,
+          "twE": 0,
+          "sc": 1.0,
+          "mov_bone_data": [
+            {
+              "name": "Layer6",
+              "dl": 0.0,
+              "frame_data": [
+                {
+                  "dI": -1,
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0,
+                  "cX": 1.0,
+                  "cY": 1.0,
+                  "kX": 0.0,
+                  "kY": 0.0,
+                  "fi": 0,
+                  "twE": 0,
+                  "tweenFrame": true
+                }
+              ]
+            },
+            {
+              "name": "Layer5",
+              "dl": 0.0,
+              "frame_data": [
+                {
+                  "dI": -1,
+                  "x": 0.0,
+                  "y": 0.0,
+                  "z": 0,
+                  "cX": 1.0,
+                  "cY": 1.0,
+                  "kX": 0.0,
+                  "kY": 0.0,
+                  "fi": 0,
+                  "twE": 0,
+                  "tweenFrame": true
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "texture_data": null
+}
