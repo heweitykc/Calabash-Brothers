@@ -1,0 +1,64 @@
+{
+  "content_scale": 1.0,
+  "armature_data": [
+    {
+      "strVersion": "1.2.0.1",
+      "version": 1.201,
+      "name": "armature0"
+    }
+  ],
+  "animation_data": [
+    {
+      "name": "armature0",
+      "mov_data": [
+        {
+          "name": "Animation1",
+          "dr": 0,
+          "lp": true,
+          "to": 0,
+          "drTW": 0,
+          "twE": 0,
+          "sc": 1.0
+        }
+      ]
+    }
+  ],
+  "texture_data": [
+    {
+      "name": "位图 1",
+      "width": 20.0,
+      "height": 10.0,
+      "pX": 0.5,
+      "pY": 0.5,
+      "plistFile": "resources/armature/hero0.plist"
+    },
+    {
+      "name": "位图 6",
+      "width": 90.0,
+      "height": 30.0,
+      "pX": 0.5,
+      "pY": 0.5,
+      "plistFile": "resources/armature/hero0.plist"
+    },
+    {
+      "name": "testAnimationResource/1",
+      "width": 201.0,
+      "height": 320.0,
+      "pX": 0.5,
+      "pY": 0.5,
+      "plistFile": "resources/armature/Cowboy0.plist"
+    },
+    {
+      "name": "bear_body",
+      "width": 105.0,
+      "height": 82.0,
+      "pX": 0.5,
+      "pY": 0.5,
+      "plistFile": "resources/armature/bear0.plist"
+    }
+  ],
+  "config_file_path": [
+    "resources/armature/hero0.plist",
+    "D:\\newcode\\Calabash-Brothers\\project3\\cocoproj\\armature0\\Resources\\resources/armature/hero0.plist"
+  ]
+}
