@@ -14,8 +14,6 @@
   <filePath>D:\newcode\Calabash-Brothers\project3\cocoproj\armature1\armature1.xml.animation</filePath>
   <ProjectType>AnimationProject</ProjectType>
   <ResRelativePath />
-  <ResourceFileList>
-    <string>armature10.plist</string>
-  </ResourceFileList>
+  <ResourceFileList />
   <bBatchImage>true</bBatchImage>
 </AnimationProject>
