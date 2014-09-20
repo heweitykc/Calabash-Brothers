@@ -1,5 +1,5 @@
 #include "AppDelegate.h"
-#include "Sky.h"
+#include "skby/PlayerTown.h"
 
 USING_NS_CC;
 
@@ -30,7 +30,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	pEGLView->setFrameSize(800, 480);
 
     // create a scene. it's an autorelease object
-	CCScene *pScene = Sky::scene();
+	CCScene *pScene = PlayerTown::createScene();
     // run
     pDirector->runWithScene(pScene);
 
