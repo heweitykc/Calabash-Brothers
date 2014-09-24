@@ -46,15 +46,14 @@ bool PlayerTown::init()
 	menu->setPosition(Vec2::ZERO);
 	this->addChild(menu, 1);
 
-	auto sprite = Sprite::create("HelloWorld.png");
+	auto sprite = Sprite::create("HelloWorld.jpg");
 	sprite->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
 	addChild(sprite);
 
 	ArmatureDataManager::getInstance()->addArmatureFileInfo("armature/knight.png", "armature/knight.plist", "armature/knight.xml");
-	ArmatureDataManager::getInstance()->addArmatureFileInfo("HeroAnimation/HeroAnimation0.png", "HeroAnimation/HeroAnimation0.plist", "HeroAnimation/Hero.ExportJson");
 	ArmatureDataManager::getInstance()->addArmatureFileInfo("armature/armature1.ExportJson");
 	ArmatureDataManager::getInstance()->addArmatureFileInfo("armature/horse.ExportJson");
-	ArmatureDataManager::getInstance()->addArmatureFileInfo("newres/armature1.ExportJson");
+	ArmatureDataManager::getInstance()->addArmatureFileInfo("armature1/armature1.ExportJson");
 
 	_hero = Armature::create("armature1");
 	_hero->getAnimation()->playByIndex(0);
