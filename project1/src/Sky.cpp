@@ -26,6 +26,23 @@ void Sky::setupWorld()
 	_world->SetAllowSleeping(true);
 }
 
+void Sky::createTestBodyAtPostition(CCPoint position)
+{
+	b2BodyDef testBodyDef;
+	testBodyDef.type = b2_dynamicBody;
+	testBodyDef.position.Set(position.x / PTM_RATIO, position.y / PTM_RATIO);
+	b2Body * testBody = _world->CreateBody(&testBodyDef);
+
+	b2CircleShape testBodyShape;
+	b2FixtureDef testFixtureDef;
+	testBodyShape.m_radius = 25.0 / PTM_RATIO;
+	testFixtureDef.shape = &testBodyShape;
+	testFixtureDef.density = 1.0;
+	testFixtureDef.friction = 0.2;
+	testFixtureDef.restitution = 0.5;
+	testBody->CreateFixture(&testFixtureDef);
+}
+
 bool Sky::init()
 {
 	this->setTouchEnabled(true);
@@ -38,7 +55,8 @@ bool Sky::init()
 	_terrain->initWithWorld(_world);
 	this->addChild(_terrain);
 
-	genBackground();	
+	genBackground();
+	setTouchEnabled(true);
 	this->scheduleUpdate();
 	this->setScale(1.0f);
 
@@ -69,12 +87,12 @@ void Sky::update(float delta)
 			if (!_hero->getAwake()) {
 				_hero->wake();
 				_tapDown = true;
-			} else {
+			} else {				
 				_hero->dive();
 			}
-		} else {
+		} else {			
 			_hero->nodive();
-		}
+		}		
 		_hero->limitVelocity();
 
 		_world->Step(UPDATE_INTERVAL,velocityIterations, positionIterations);
@@ -89,12 +107,12 @@ void Sky::update(float delta)
 	float scale = (winSize.height * 3 / 4) / _hero->getPositionY();
 	if (scale > 1) scale = 1;
 	_terrain->setScale(scale);
-	_terrain->setOffsetX(offset);
 
 	/*
 	CCSize textureSize = _background->getTextureRect().size;
 	_background->setTextureRect(CCRectMake(offset*0.7, 0, textureSize.width, textureSize.height));
 	*/
+	_terrain->setOffsetX(offset);
 }
 
 void Sky::onTouchesBegan(const std::vector<Touch*>& touches, Event *unused_event)
@@ -104,14 +122,14 @@ void Sky::onTouchesBegan(const std::vector<Touch*>& touches, Event *unused_event
 	_tapDown = true;
 }
 
-void Sky::onTouchesCancelled(const std::vector<Touch*>& touches, Event *unused_event)
+void Sky::onTouchesMoved(const std::vector<Touch*>& touches, Event *unused_event)
 {
 	_tapDown = false;
 }
 
 void Sky::onTouchesEnded(const std::vector<Touch*>& touches, Event *unused_event)
 {
-	_tapDown = false;
+	_tapDown = true;
 }
 
 void Sky::setupDebugDraw()

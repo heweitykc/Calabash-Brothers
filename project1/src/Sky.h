@@ -26,12 +26,15 @@ private:
 	GLESDebugDraw * _debugDraw;
 
 	ccColor4F randomBrightColor();
+	CCSprite* spriteWithColor(ccColor4F bgColor, float textureSize);
+	CCSprite* stripedSpriteWithColor1(ccColor4F c1, ccColor4F c2, float textureSize, int nStripes);
 	void genBackground();
-	void setupWorld();	
+	void setupWorld();
+	void createTestBodyAtPostition(CCPoint position);
 
 	virtual void update(float delta);
 	virtual void onTouchesBegan(const std::vector<Touch*>& touches, Event *unused_event);
-	virtual void onTouchesCancelled(const std::vector<Touch*>& touches, Event *unused_event);
+	virtual void onTouchesMoved(const std::vector<Touch*>& touches, Event *unused_event);
 	virtual void onTouchesEnded(const std::vector<Touch*>& touches, Event *unused_event);
 	void setupDebugDraw();
 };
