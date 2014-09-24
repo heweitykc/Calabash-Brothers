@@ -3,6 +3,7 @@
 
 #include "cocos2d.h"
 #include "cocostudio/CocoStudio.h"
+#include "CubeTexture.h"
 
 class PlayerTown : public cocos2d::Layer
 {
@@ -23,6 +24,7 @@ public:
 	cocostudio::Armature *_hero;
 	cocostudio::Armature *_horse;
 
+	CubeTexture *_cube;
 	int _cc;
 	int a;
 	void move(float dt);
