@@ -52,20 +52,31 @@ bool PlayerTown::init()
 
 	ArmatureDataManager::getInstance()->addArmatureFileInfo("armature/knight.png", "armature/knight.plist", "armature/knight.xml");
 	ArmatureDataManager::getInstance()->addArmatureFileInfo("HeroAnimation/HeroAnimation0.png", "HeroAnimation/HeroAnimation0.plist", "HeroAnimation/Hero.ExportJson");
+	ArmatureDataManager::getInstance()->addArmatureFileInfo("armature/hero.ExportJson");
 	ArmatureDataManager::getInstance()->addArmatureFileInfo("armature/armature1.ExportJson");
 	ArmatureDataManager::getInstance()->addArmatureFileInfo("armature/horse.ExportJson");
 	ArmatureDataManager::getInstance()->addArmatureFileInfo("newres/armature1.ExportJson");
 
-	_hero = Armature::create("armature1");
-	_hero->getAnimation()->playByIndex(0);
+	_cube = CubeTexture::create();
+	this->addChild(_cube);
+
+	_hero = Armature::create("hero");
+	_hero->getAnimation()->playByIndex(1);
 	this->addChild(_hero);
-	_hero->setPosition(200, 300);
+	//_hero->setPosition(200, 300);
 
 	_horse = Armature::create("horse");
 	_horse->getAnimation()->playByIndex(1);
 	this->addChild(_horse);
+
 	_horse->setPosition(200, 300);
-	
+	Bone* bone = _horse->getBone("hero");
+	//bone->removeDisplay(0);
+	bone->addDisplay(_hero, 0);	
+	bone->changeDisplayWithIndex(0, true);
+	bone->setIgnoreMovementBoneData(true);
+	_hero->setPosition(0, 0);
+
 	//_hero->getBone("hero")->removeDisplay(0);
 	//_hero->stopAllActions();
 
@@ -81,21 +92,23 @@ bool PlayerTown::init()
 
 void PlayerTown::move(float dt)
 {	
-	float nowx = _hero->getPositionX();
+	float nowx = _horse->getPositionX();
 	if (nowx > 600){
 		a = -1;
-		_hero->setScaleX(-1);
+		_horse->setScaleX(-1);
 	} else if (nowx <= 310){
 		a = 1;
-		_hero->setScaleX(1);
+		_horse->setScaleX(1);
 	}
-	_hero->setPosition(nowx + a * 3, 300);
+	_horse->setPosition(nowx + a * 3, 300);
 	std::stringstream ss;
 	ss << _cc;
 	std::string lbstr;
 	ss >> lbstr;
 	_msglb->setString(lbstr);
-	_cc++;	
+	_cc++;
+
+	_cube->setPositionX(_cube->getPositionX()+1);
 }
 
 void PlayerTown::menuCloseCallback(Ref* pSender)
