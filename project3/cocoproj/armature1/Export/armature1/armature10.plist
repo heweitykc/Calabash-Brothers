@@ -4,16 +4,16 @@
 	<dict>
 		<key>frames</key>
 		<dict>
-			<key>images/wing.png</key>
+			<key>images/right-hand.png</key>
 			<dict>
 				<key>width</key>
-				<integer>137</integer>
+				<integer>56</integer>
 				<key>height</key>
-				<integer>150</integer>
+				<integer>58</integer>
 				<key>originalWidth</key>
-				<integer>137</integer>
+				<integer>56</integer>
 				<key>originalHeight</key>
-				<integer>150</integer>
+				<integer>58</integer>
 				<key>x</key>
 				<integer>0</integer>
 				<key>y</key>
@@ -23,18 +23,113 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
-			<key>images/token.png</key>
+			<key>images/left-hand.png</key>
 			<dict>
 				<key>width</key>
-				<integer>123</integer>
+				<integer>52</integer>
 				<key>height</key>
-				<integer>122</integer>
+				<integer>53</integer>
 				<key>originalWidth</key>
-				<integer>123</integer>
+				<integer>52</integer>
 				<key>originalHeight</key>
-				<integer>122</integer>
+				<integer>53</integer>
 				<key>x</key>
-				<integer>139</integer>
+				<integer>58</integer>
+				<key>y</key>
+				<integer>0</integer>
+				<key>offsetX</key>
+				<real>0</real>
+				<key>offsetY</key>
+				<real>0</real>
+			</dict>
+			<key>images/right-foot.png</key>
+			<dict>
+				<key>width</key>
+				<integer>66</integer>
+				<key>height</key>
+				<integer>56</integer>
+				<key>originalWidth</key>
+				<integer>66</integer>
+				<key>originalHeight</key>
+				<integer>56</integer>
+				<key>x</key>
+				<integer>112</integer>
+				<key>y</key>
+				<integer>0</integer>
+				<key>offsetX</key>
+				<real>0</real>
+				<key>offsetY</key>
+				<real>0</real>
+			</dict>
+			<key>images/left-foot.png</key>
+			<dict>
+				<key>width</key>
+				<integer>80</integer>
+				<key>height</key>
+				<integer>47</integer>
+				<key>originalWidth</key>
+				<integer>80</integer>
+				<key>originalHeight</key>
+				<integer>47</integer>
+				<key>x</key>
+				<integer>180</integer>
+				<key>y</key>
+				<integer>0</integer>
+				<key>offsetX</key>
+				<real>0</real>
+				<key>offsetY</key>
+				<real>0</real>
+			</dict>
+			<key>images/torso.png</key>
+			<dict>
+				<key>width</key>
+				<integer>77</integer>
+				<key>height</key>
+				<integer>85</integer>
+				<key>originalWidth</key>
+				<integer>77</integer>
+				<key>originalHeight</key>
+				<integer>85</integer>
+				<key>x</key>
+				<integer>262</integer>
+				<key>y</key>
+				<integer>0</integer>
+				<key>offsetX</key>
+				<real>0</real>
+				<key>offsetY</key>
+				<real>0</real>
+			</dict>
+			<key>images/head.png</key>
+			<dict>
+				<key>width</key>
+				<integer>116</integer>
+				<key>height</key>
+				<integer>124</integer>
+				<key>originalWidth</key>
+				<integer>116</integer>
+				<key>originalHeight</key>
+				<integer>124</integer>
+				<key>x</key>
+				<integer>341</integer>
+				<key>y</key>
+				<integer>0</integer>
+				<key>offsetX</key>
+				<real>0</real>
+				<key>offsetY</key>
+				<real>0</real>
+			</dict>
+			<key>images/spear.png</key>
+			<dict>
+				<key>width</key>
+				<integer>22</integer>
+				<key>height</key>
+				<integer>368</integer>
+				<key>originalWidth</key>
+				<integer>22</integer>
+				<key>originalHeight</key>
+				<integer>368</integer>
+				<key>x</key>
+				<integer>459</integer>
 				<key>y</key>
 				<integer>0</integer>
 				<key>offsetX</key>
