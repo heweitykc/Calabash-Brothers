@@ -134,9 +134,9 @@ void CubeTexture::onDraw()
 	};
 
 	const Vertex Vertices2[] = {
-		{ { 0.5, -0.5, 0.01 }, { 1, 1, 1, 1 }, { 1, 1 } },
-		{ { 0.5, 0.5, 0.01 }, { 1, 1, 1, 1 }, { 1, 0 } },
-		{ { -0.5, 0.5, 0.01 }, { 1, 1, 1, 1 }, { 0, 0 } },
+		{ { 0.5, -0.5, 0.01 },  { 1, 1, 1, 1 }, { 1, 1 } },
+		{ { 0.5, 0.5, 0.01 },   { 1, 1, 1, 1 }, { 1, 0 } },
+		{ { -0.5, 0.5, 0.01 },  { 1, 1, 1, 1 }, { 0, 0 } },
 		{ { -0.5, -0.5, 0.01 }, { 1, 1, 1, 1 }, { 0, 1 } },
 	};
 
@@ -172,6 +172,7 @@ void CubeTexture::onDraw()
 	glEnable(GL_DEPTH_TEST);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_BYTE, 0);
 	glUniform1i(_textureUniform, 0);
+
 
 	glGenBuffers(1, &_vertexBuffer2);
 	glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer2);
