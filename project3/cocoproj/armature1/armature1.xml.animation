@@ -1,19 +1,21 @@
 <?xml version="1.0"?>
 <AnimationProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <ProjectDir>E:\newcode\Calabash-Brothers\project3\cocoproj\armature1</ProjectDir>
+  <ProjectDir>D:\newcode\Calabash-Brothers\project3\cocoproj\armature1</ProjectDir>
   <Version>1.6.0.0</Version>
-  <Resources>E:\newcode\Calabash-Brothers\project3\cocoproj\armature1\Resources</Resources>
+  <Resources>D:\newcode\Calabash-Brothers\project3\cocoproj\armature1\Resources</Resources>
   <Name>armature1</Name>
   <JsonFileName>armature1.json</JsonFileName>
-  <JsonFolder>E:\newcode\Calabash-Brothers\project3\cocoproj\armature1\Json</JsonFolder>
+  <JsonFolder>D:\newcode\Calabash-Brothers\project3\cocoproj\armature1\Json</JsonFolder>
   <JsonList />
   <CanvasSize>
     <Width>0</Width>
     <Height>0</Height>
   </CanvasSize>
-  <filePath>E:\newcode\Calabash-Brothers\project3\cocoproj\armature1\armature1.xml.animation</filePath>
+  <filePath>D:\newcode\Calabash-Brothers\project3\cocoproj\armature1\armature1.xml.animation</filePath>
   <ProjectType>AnimationProject</ProjectType>
   <ResRelativePath />
-  <ResourceFileList />
+  <ResourceFileList>
+    <string>armature10.plist</string>
+  </ResourceFileList>
   <bBatchImage>true</bBatchImage>
 </AnimationProject>
