@@ -46,46 +46,30 @@ bool PlayerTown::init()
 	menu->setPosition(Vec2::ZERO);
 	this->addChild(menu, 1);
 
-	auto sprite = Sprite::create("HelloWorld.png");
+	auto sprite = Sprite::create("HelloWorld.jpg");
 	sprite->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
 	addChild(sprite);
 
-	ArmatureDataManager::getInstance()->addArmatureFileInfo("armature/knight.png", "armature/knight.plist", "armature/knight.xml");	
-	ArmatureDataManager::getInstance()->addArmatureFileInfo("armature/hero.ExportJson");
+	ArmatureDataManager::getInstance()->addArmatureFileInfo("armature/knight.png", "armature/knight.plist", "armature/knight.xml");
 	ArmatureDataManager::getInstance()->addArmatureFileInfo("armature/armature1.ExportJson");
 	ArmatureDataManager::getInstance()->addArmatureFileInfo("armature/horse.ExportJson");
-	ArmatureDataManager::getInstance()->addArmatureFileInfo("newres/armature1.ExportJson");
+	ArmatureDataManager::getInstance()->addArmatureFileInfo("armature1/armature1.ExportJson");
 
-	_cube = CubeTexture::create();
-	this->addChild(_cube);
-
-	_hero = Armature::create("hero");
-	_hero->getAnimation()->playByIndex(1);
+	_hero = Armature::create("armature1");
+	_hero->getAnimation()->playByIndex(0);
 	this->addChild(_hero);
-	//_hero->setPosition(200, 300);
+	_hero->setPosition(200, 300);
 
 	_horse = Armature::create("horse");
 	_horse->getAnimation()->playByIndex(1);
 	this->addChild(_horse);
-
 	_horse->setPosition(200, 300);
-	Bone* bone = _horse->getBone("hero");
-	//bone->removeDisplay(0);
-	bone->addDisplay(_hero, 0);	
-	bone->changeDisplayWithIndex(0, true);
-	bone->setIgnoreMovementBoneData(true);
-	_hero->setPosition(0, 0);
-
+	
 	//_hero->getBone("hero")->removeDisplay(0);
 	//_hero->stopAllActions();
 
 	_msglb = LabelTTF::create("Hello World", "Arial", 24);
 	this->addChild(_msglb);
-
-	auto _child = Armature::create("armature1");
-	_child->getAnimation()->playByIndex(0);
-	this->addChild(_child);
-	_child->setPosition(200,200);
 
 	a = 1;
 	_cc = 0;
@@ -96,23 +80,21 @@ bool PlayerTown::init()
 
 void PlayerTown::move(float dt)
 {	
-	float nowx = _horse->getPositionX();
+	float nowx = _hero->getPositionX();
 	if (nowx > 600){
 		a = -1;
-		_horse->setScaleX(-1);
+		_hero->setScaleX(-1);
 	} else if (nowx <= 310){
 		a = 1;
-		_horse->setScaleX(1);
+		_hero->setScaleX(1);
 	}
-	_horse->setPosition(nowx + a * 3, 300);
+	_hero->setPosition(nowx + a * 3, 300);
 	std::stringstream ss;
 	ss << _cc;
 	std::string lbstr;
 	ss >> lbstr;
 	_msglb->setString(lbstr);
-	_cc++;
-
-	_cube->setPositionX(_cube->getPositionX()+1);
+	_cc++;	
 }
 
 void PlayerTown::menuCloseCallback(Ref* pSender)
