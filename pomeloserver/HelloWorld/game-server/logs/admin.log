@@ -1,0 +1,1 @@
+[2014-10-10 10:43:09.403] [INFO] admin-log - [32m[D:\newcode\Calabash-Brothers\pomeloserver\HelloWorld\game-server\node_modules\pomelo\lib\master\master.js] [39m{"action":"execute","moduleId":"__console__","method":"clientHandler","msg":{"signal":"list","clientId":"pomelo_list_1412908989358","username":"admin"}}

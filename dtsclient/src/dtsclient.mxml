@@ -1,8 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
 			   xmlns:s="library://ns.adobe.com/flex/spark" 
-			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="955" minHeight="600">
+			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="955" minHeight="600" initialize="application1_initializeHandler(event)">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import msg.ReqLoginForPlatformMessage;
+			
+			private var _sock:SocketHandler;
+			protected function application1_initializeHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub		
+				_sock = new SocketHandler();
+				_sock.setAddr(0,"s2830.37wandts.6ght.com",8030,843);
+				_sock.addEvtListener(SocketEvent.CONNECTED, this.__onConnect);
+				_sock.addReceiveHandler(this.receiveData);
+				_sock.addEvtListener(SocketEvent.CLOSED, this.__onClose);
+				_sock.addEvtListener(SocketEvent.ERROR, this.__onError);
+				_sock.connect();
+				
+				
+				Params.username = "";
+			}
+			
+			private function __onConnect(event:SocketEvent) : void
+			{
+				Log.log("连接服务器成功: " + (event.currentTarget as SocketHandler).ipAddr + ":" + (event.currentTarget as SocketHandler).port + ":" + (event.currentTarget as SocketHandler).sport);
+				
+				
+				//var signstr:* = MD5.hash(Params.username + Params.serverid + Params.isadult + Params.time + Params.pfOpenKey);
+				
+				var loginmsg:ReqLoginForPlatformMessage = new ReqLoginForPlatformMessage();
+				loginmsg.serverId = "2830";
+				loginmsg.username = "heweitykc";
+				loginmsg.time = "1413260045";
+				loginmsg.isadult = "3";
+				loginmsg.sign = "10fc0d7528efd3d1521367f8d96644f9";
+				loginmsg.logintype = "1";
+				send(loginmsg,0);
+			}
+			
+			private function __onClose(event:SocketEvent) : void
+			{
+				
+			}
+			
+			private function __onError(event:SocketEvent) : void
+			{
+				Log.log("连接主服务器失败", event.obj);
+				dispatchEvent(event);
+				return;
+			}
+			
+			private function receiveData(param1:int, param2:ByteArray) : void
+			{
+				Log.log("收到数据,p="+param1+",bts="+param2.length);
+			}
+			
+			public function send(param1:Message, param2:uint, param3:Boolean = false) : int
+			{
+				var _loc_7:* = null;
+				if (!param1)
+				{
+					return 0;
+				}
+				var _loc_4:* = Message(param1);
+				_loc_4.write();
+				var _loc_5:* = new ByteArray();
+				_loc_5.writeInt(0);
+				_loc_5.writeInt(_loc_4.getId());
+				if (param3)
+				{
+					_loc_7 = Satify.write(_loc_4.getBuf());
+					_loc_5.writeBytes(_loc_7);
+				}
+				else
+				{
+					_loc_5.writeBytes(_loc_4.getBuf());
+				}
+				_loc_5.position = 0;
+				ByteArrayUtil.directWriteInt(_loc_5, 0, _loc_5.length - 4);
+				_sock.sendPackage(_loc_5);
+				Log.log("发=====>长度:" + (_loc_5.length - 4) + " cmd:", _loc_4.getId(), getQualifiedClassName(_loc_4).split("::")[1]);
+				_loc_4.clear();
+				return 0;
+			}// end function
+		]]>
+	</fx:Script>	
 </s:Application>
