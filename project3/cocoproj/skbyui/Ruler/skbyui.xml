@@ -4,4 +4,12 @@
     <Project>skbyui_1</Project>
     <GuidesList />
   </GuidesProject>
+  <GuidesProject>
+    <Project>loginui</Project>
+    <GuidesList />
+  </GuidesProject>
+  <GuidesProject>
+    <Project>chatui</Project>
+    <GuidesList />
+  </GuidesProject>
 </ArrayOfGuidesProject>

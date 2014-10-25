@@ -10,9 +10,7 @@
   "designHeight": 640,
   "designWidth": 960,
   "textures": [],
-  "texturesPng": [
-    "GUI/button.png"
-  ],
+  "texturesPng": [],
   "version": "1.6.0.0",
   "widgetTree": {
     "classname": "Panel",
@@ -464,7 +462,7 @@
           "ignoreSize": true,
           "layoutParameter": null,
           "opacity": 255,
-          "positionPercentX": 0.9403648,
+          "positionPercentX": 0.939583361,
           "positionPercentY": 0.9625,
           "positionType": 0,
           "rotation": 0,

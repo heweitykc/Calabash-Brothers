@@ -8,6 +8,8 @@
   <JsonFolder>E:\newcode\Calabash-Brothers\project3\cocoproj\skbyui\Json</JsonFolder>
   <JsonList>
     <string>skbyui_1.json</string>
+    <string>loginui.json</string>
+    <string>chatui.json</string>
   </JsonList>
   <CanvasSize>
     <Width>960</Width>
@@ -21,5 +23,5 @@
     <string>GUI/button.png</string>
   </imagePngList>
   <JsonSuffix>.json</JsonSuffix>
-  <CurrentUIJson>skbyui_1.json</CurrentUIJson>
+  <CurrentUIJson>loginui.json</CurrentUIJson>
 </UIProject>
